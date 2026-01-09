@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Convenios</title>
+</head>
+
+<body>
+
+    <h1>Listado de Convenios</h1>
+
+    <a th:href="@{/convenios/nuevo}">Nuevo Convenio</a>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Centro</th>
+            <th>Ubicación</th>
+            <th>Acciones</th>
+        </tr>
+        <tr th:each="c : ${convenios}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.nombre}"></td>
+            <td th:text="${c.centro}"></td>
+            <td th:text="${c.ubicacion}"></td>
+            <td>
+                <a th:href="@{/convenios/eliminar/{id}(id=${c.id})}"
+                    onclick="return confirm('¿Seguro que deseas eliminar este convenio?');">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

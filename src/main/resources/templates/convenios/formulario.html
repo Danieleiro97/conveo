@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuevo Convenio</title>
+</head>
+<body>
+
+<h1>Nuevo Convenio</h1>
+
+<form th:action="@{/convenios/guardar}" th:object="${convenio}" method="post">
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" /><br/>
+
+    <label>Centro:</label>
+    <input type="text" th:field="*{centro}" /><br/>
+
+    <label>Ubicación:</label>
+    <input type="text" th:field="*{ubicacion}" /><br/>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a th:href="@{/convenios}">Volver</a>
+
+</body>
+</html>
