@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Nuevo Convenio</title>
 </head>
+
 <body>
 
-<h1>Nuevo Convenio</h1>
+    <h1>Nuevo Convenio</h1>
 
-<form th:action="@{/convenios/guardar}" th:object="${convenio}" method="post">
-    <input type="hidden" th:field="*{id}" />
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" /><br/>
+    <form th:action="@{/convenios/guardar}" th:object="${convenio}" method="post">
 
-    <label>Centro:</label>
-    <input type="text" th:field="*{centro}" /><br/>
+        <input type="hidden" th:field="*{id}" />
 
-    <label>Ubicación:</label>
-    <input type="text" th:field="*{ubicacion}" /><br/>
+        <label>Nombre:</label>
+        <input type="text" th:field="*{nombre}" /><br />
 
-    <button type="submit">Guardar</button>
-</form>
+        <label>Fecha inicio:</label>
+        <input type="date" th:field="*{fechaInicio}" /><br />
 
-<a th:href="@{/convenios}">Volver</a>
+        <label>Fecha fin:</label>
+        <input type="date" th:field="*{fechaFin}" /><br />
+
+        <label>Centro:</label>
+        <select name="centroId">
+            <option value="">-- Selecciona un centro --</option>
+            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}">
+            </option>
+        </select><br />
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a th:href="@{/convenios}">Volver</a>
 
 </body>
+
 </html>

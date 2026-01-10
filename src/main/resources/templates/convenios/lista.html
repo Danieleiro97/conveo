@@ -16,14 +16,18 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Centro</th>
-            <th>Ubicación</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Activo</th>
             <th>Acciones</th>
         </tr>
         <tr th:each="c : ${convenios}">
             <td th:text="${c.id}"></td>
             <td th:text="${c.nombre}"></td>
-            <td th:text="${c.centro}"></td>
-            <td th:text="${c.ubicacion}"></td>
+            <td th:text="${c.centro.nombre}"></td>
+            <td th:text="${c.fechaInicio}"></td>
+            <td th:text="${c.fechaFin}"></td>
+            <td th:text="${c.activo}"></td>
             <td>
                 <a th:href="@{/convenios/editar/{id}(id=${c.id})}">Editar</a>
                 |

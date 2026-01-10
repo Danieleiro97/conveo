@@ -1,6 +1,10 @@
 package dlc.daw.conveo.model;
+
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
 @Table(name = "convenios")
 @Data
@@ -15,9 +19,13 @@ public class Convenio {
     @Column(nullable = false)
     private String nombre;
 
-    private String centro;
+    @ManyToOne
+    @JoinColumn(name = "centro_id", nullable = false)
+    private Centro centro;
 
-    private String ubicacion;
+    private LocalDate fechaInicio;
+
+    private LocalDate fechaFin;
 
     private boolean activo = true;
 }
