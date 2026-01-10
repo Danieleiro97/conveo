@@ -21,6 +21,27 @@
         <label>Email:</label>
         <input type="email" th:field="*{email}" /><br />
 
+        <label>Teléfono:</label>
+        <input type="text" th:field="*{telefono}" /><br />
+
+        <label>DNI:</label>
+        <input type="text" th:field="*{dni}" /><br />
+
+        <label>Inicio prácticas:</label>
+        <input type="date" th:field="*{fechaInicioPracticas}" /><br />
+
+        <label>Fin prácticas:</label>
+        <input type="date" th:field="*{fechaFinPracticas}" /><br />
+
+        <label>Centro:</label>
+        <select name="centroId">
+            <option value="">-- Selecciona un centro --</option>
+            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
+                th:selected="${estudiante.centro != null and estudiante.centro.id == c.id}">
+            </option>
+        </select><br />
+
+
         <label>Convenio:</label>
         <select name="convenioId">
             <option value="">-- Selecciona un convenio --</option>
@@ -28,6 +49,7 @@
                 th:selected="${estudiante.convenio != null and estudiante.convenio.id == c.id}">
             </option>
         </select><br />
+
 
         <button type="submit">Guardar</button>
     </form>

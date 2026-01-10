@@ -25,7 +25,8 @@
         <label>Centro:</label>
         <select name="centroId">
             <option value="">-- Selecciona un centro --</option>
-            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}">
+            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
+                th:selected="${convenio.centro != null and convenio.centro.id == c.id}">
             </option>
         </select><br />
 

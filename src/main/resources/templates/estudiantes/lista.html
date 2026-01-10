@@ -16,14 +16,18 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Convenio</th>
+            <th>Centro</th>
+            <th>Inicio Prácticas</th>
+            <th>Fin Prácticas</th>
             <th>Acciones</th>
         </tr>
         <tr th:each="e : ${estudiantes}">
             <td th:text="${e.id}"></td>
             <td th:text="${e.nombre} + ' ' + ${e.apellidos}"></td>
             <td th:text="${e.email}"></td>
-            <td th:text="${e.convenio != null ? e.convenio.nombre : 'Sin convenio'}"></td>
+            <td th:text="${e.centro.nombre}"></td>
+            <td th:text="${#temporals.format(e.fechaInicioPracticas, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#temporals.format(e.fechaFinPracticas, 'dd/MM/yyyy')}"></td>
             <td>
                 <a th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a>
                 |

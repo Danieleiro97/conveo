@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Centros</title>
 </head>
+
 <body>
 
-<h1>Centros</h1>
+    <h1>Centros</h1>
 
-<a th:href="@{/centros/nuevo}">Nuevo Centro</a>
+    <a th:href="@{/centros/nuevo}">Nuevo Centro</a>
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Ubicación</th>
-        <th>Email</th>
-        <th>Activo</th>
-        <th>Acciones</th>
-    </tr>
-    <tr th:each="c : ${centros}">
-        <td th:text="${c.id}"></td>
-        <td th:text="${c.nombre}"></td>
-        <td th:text="${c.ubicacion}"></td>
-        <td th:text="${c.emailContacto}"></td>
-        <td th:text="${c.activo}"></td>
-        <td>
-            <a th:href="@{/centros/eliminar/{id}(id=${c.id})}"
-               onclick="return confirm('¿Eliminar centro?');">
-               Eliminar
-            </a>
-        </td>
-    </tr>
-</table>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Email</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+        <tr th:each="c : ${centros}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.nombre}"></td>
+            <td th:text="${c.ubicacion}"></td>
+            <td th:text="${c.emailContacto}"></td>
+            <td th:text="${c.activo}"></td>
+            <td>
+                <a th:href="@{/centros/editar/{id}(id=${c.id})}">Editar</a>
+                |
+                <a th:href="@{/centros/eliminar/{id}(id=${c.id})}" onclick="return confirm('¿Eliminar centro?');">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+    </table>
 
 </body>
+
 </html>

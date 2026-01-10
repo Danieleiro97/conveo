@@ -51,8 +51,8 @@ public class ConvenioController {
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
-        Convenio convenio = convenioService.buscarPorId(id);
-        model.addAttribute("convenio", convenio);
+        model.addAttribute("convenio", convenioService.buscarPorId(id));
+        model.addAttribute("centros", centroService.listarTodos());
         return "convenios/formulario";
     }
 }

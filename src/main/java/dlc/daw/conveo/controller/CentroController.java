@@ -39,4 +39,10 @@ public class CentroController {
         centroService.eliminar(id);
         return "redirect:/centros";
     }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("centro", centroService.buscarPorId(id));
+        return "centros/formulario";
+    }
 }

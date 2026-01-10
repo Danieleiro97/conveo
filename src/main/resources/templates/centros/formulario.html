@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Nuevo Centro</title>
 </head>
+
 <body>
 
-<h1>Nuevo Centro</h1>
+    <h1>Nuevo Centro</h1>
 
-<form th:action="@{/centros/guardar}" th:object="${centro}" method="post">
+    <form th:action="@{/centros/guardar}" th:object="${centro}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <label>Nombre:</label>
+        <input type="text" th:field="*{nombre}" /><br />
 
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" /><br/>
+        <label>Ubicación:</label>
+        <input type="text" th:field="*{ubicacion}" /><br />
 
-    <label>Ubicación:</label>
-    <input type="text" th:field="*{ubicacion}" /><br/>
+        <label>Email contacto:</label>
+        <input type="email" th:field="*{emailContacto}" /><br />
 
-    <label>Email contacto:</label>
-    <input type="email" th:field="*{emailContacto}" /><br/>
+        <button type="submit">Guardar</button>
+    </form>
 
-    <button type="submit">Guardar</button>
-</form>
-
-<a th:href="@{/centros}">Volver</a>
+    <a th:href="@{/centros}">Volver</a>
 
 </body>
+
 </html>
