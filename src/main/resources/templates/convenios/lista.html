@@ -26,6 +26,7 @@
             <td th:text="${c.ubicacion}"></td>
             <td>
                 <a th:href="@{/convenios/editar/{id}(id=${c.id})}">Editar</a>
+                |
                 <a th:href="@{/convenios/eliminar/{id}(id=${c.id})}"
                     onclick="return confirm('¿Seguro que deseas eliminar este convenio?');">
                     Eliminar

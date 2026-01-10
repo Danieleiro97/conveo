@@ -50,4 +50,11 @@ public class EstudianteController {
         estudianteService.eliminar(id);
         return "redirect:/estudiantes";
     }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("estudiante", estudianteService.buscarPorId(id));
+        model.addAttribute("convenios", convenioService.listarTodos());
+        return "estudiantes/formulario";
+    }
 }
