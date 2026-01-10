@@ -20,6 +20,17 @@
         <label>Email contacto:</label>
         <input type="email" th:field="*{emailContacto}" /><br />
 
+        <h3>Titulaciones</h3>
+
+        <div th:each="t : ${titulaciones}">
+            <label>
+                <input type="checkbox" name="titulacionIds" th:value="${t.id}"
+                    th:checked="${asignadas.contains(t.id)}" />
+                <span th:text="${t.nombre} + ' (' + ${t.nivel} + ')'"></span>
+            </label>
+            <br />
+        </div>
+
         <button type="submit">Guardar</button>
     </form>
 
