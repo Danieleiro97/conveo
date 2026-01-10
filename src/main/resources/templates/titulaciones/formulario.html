@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Titulación</title>
+</head>
+<body>
+
+<h1 th:text="${titulacion.id == null ? 'Nueva Titulación' : 'Editar Titulación'}"></h1>
+
+<form th:action="@{/titulaciones/guardar}" th:object="${titulacion}" method="post">
+
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" /><br/>
+
+    <label>Nivel:</label>
+    <select th:field="*{nivel}">
+        <option th:each="n : ${niveles}"
+                th:value="${n}"
+                th:text="${n}">
+        </option>
+    </select><br/>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a th:href="@{/titulaciones}">Volver</a>
+
+</body>
+</html>

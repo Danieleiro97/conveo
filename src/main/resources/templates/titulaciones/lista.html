@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Titulaciones</title>
+</head>
+<body>
+
+<h1>Listado de Titulaciones</h1>
+
+<a th:href="@{/titulaciones/nuevo}">Nueva Titulación</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Nivel</th>
+        <th>Acciones</th>
+    </tr>
+
+    <tr th:each="t : ${titulaciones}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.nombre}"></td>
+        <td th:text="${t.nivel}"></td>
+        <td>
+            <a th:href="@{/titulaciones/editar/{id}(id=${t.id})}">Editar</a>
+            |
+            <a th:href="@{/titulaciones/eliminar/{id}(id=${t.id})}"
+               onclick="return confirm('¿Eliminar titulación?');">
+                Eliminar
+            </a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
