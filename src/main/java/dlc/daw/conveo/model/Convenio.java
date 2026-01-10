@@ -24,7 +24,11 @@ public class Convenio {
     @JoinColumn(name = "centro_id", nullable = false)
     private Centro centro;
 
-   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @ManyToOne
+    @JoinColumn(name = "titulacion_id", nullable = false)
+    private Titulacion titulacion;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaInicio;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

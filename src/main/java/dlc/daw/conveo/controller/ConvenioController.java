@@ -2,6 +2,8 @@ package dlc.daw.conveo.controller;
 
 import dlc.daw.conveo.model.Convenio;
 import dlc.daw.conveo.service.ConvenioService;
+import dlc.daw.conveo.service.TitulacionService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,13 @@ public class ConvenioController {
 
     private final CentroService centroService;
 
+    private final TitulacionService titulacionService;
+
     public ConvenioController(ConvenioService convenioService,
-            CentroService centroService) {
+            CentroService centroService, TitulacionService titulacionService) {
         this.convenioService = convenioService;
         this.centroService = centroService;
+        this.titulacionService = titulacionService;
     }
 
     @GetMapping
@@ -31,14 +36,16 @@ public class ConvenioController {
     public String nuevo(Model model) {
         model.addAttribute("convenio", new Convenio());
         model.addAttribute("centros", centroService.listarTodos());
+        model.addAttribute("titulaciones", titulacionService.listarTodas());
         return "convenios/formulario";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Convenio convenio,
-            @RequestParam Long centroId) {
+            @RequestParam Long centroId, @RequestParam Long titulacionId) {
 
         convenio.setCentro(centroService.buscarPorId(centroId));
+        convenio.setTitulacion(titulacionService.buscarPorId(titulacionId));
         convenioService.guardar(convenio);
         return "redirect:/convenios";
     }
@@ -53,6 +60,7 @@ public class ConvenioController {
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("convenio", convenioService.buscarPorId(id));
         model.addAttribute("centros", centroService.listarTodos());
+        model.addAttribute("titulaciones", titulacionService.listarTodas());
         return "convenios/formulario";
     }
 }

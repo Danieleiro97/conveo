@@ -40,8 +40,13 @@
                 th:selected="${estudiante.centro != null and estudiante.centro.id == c.id}">
             </option>
         </select><br />
-
-
+        <label>Titulación:</label>
+        <select name="titulacionId">
+            <option value="">-- Selecciona una titulación --</option>
+            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
+                th:selected="${estudiante.titulacion != null and estudiante.titulacion.id == t.id}">
+            </option>
+        </select><br />
         <label>Convenio:</label>
         <select name="convenioId">
             <option value="">-- Selecciona un convenio --</option>

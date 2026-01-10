@@ -36,6 +36,10 @@ public class Estudiante {
     private Centro centro;
 
     @ManyToOne
+    @JoinColumn(name = "titulacion_id", nullable = false)
+    private Titulacion titulacion;
+
+    @ManyToOne
     @JoinColumn(name = "convenio_id")
     private Convenio convenio;
 }

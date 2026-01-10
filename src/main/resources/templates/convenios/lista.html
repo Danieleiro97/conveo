@@ -16,6 +16,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Centro</th>
+            <th>Titulación</th>
             <th>Inicio</th>
             <th>Fin</th>
             <th>Activo</th>
@@ -25,6 +26,7 @@
             <td th:text="${c.id}"></td>
             <td th:text="${c.nombre}"></td>
             <td th:text="${c.centro.nombre}"></td>
+            <td th:text="${c.titulacion.nombre}"></td>
             <td th:text="${c.fechaInicio}"></td>
             <td th:text="${c.fechaFin}"></td>
             <td th:text="${c.activo}"></td>
