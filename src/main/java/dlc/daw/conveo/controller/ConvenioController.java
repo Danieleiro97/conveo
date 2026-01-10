@@ -39,4 +39,11 @@ public class ConvenioController {
         convenioService.eliminar(id);
         return "redirect:/convenios";
     }
+
+    @GetMapping("/editar/{id}")
+public String editar(@PathVariable Long id, Model model) {
+    Convenio convenio = convenioService.buscarPorId(id);
+    model.addAttribute("convenio", convenio);
+    return "convenios/formulario";
+}
 }

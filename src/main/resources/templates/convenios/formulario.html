@@ -8,6 +8,7 @@
 <h1>Nuevo Convenio</h1>
 
 <form th:action="@{/convenios/guardar}" th:object="${convenio}" method="post">
+    <input type="hidden" th:field="*{id}" />
     <label>Nombre:</label>
     <input type="text" th:field="*{nombre}" /><br/>
 
