@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Detalle estudiante</title>
+</head>
+
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <h1>Ficha de estudiante</h1>
+
+    <h2 th:text="${estudiante.nombre} + ' ' + ${estudiante.apellidos}"></h2>
+
+    <p><b>ID:</b> <span th:text="${estudiante.id}"></span></p>
+    <p><b>Email:</b> <span th:text="${estudiante.email}"></span></p>
+    <p><b>Teléfono:</b> <span th:text="${estudiante.telefono}"></span></p>
+    <p><b>DNI:</b> <span th:text="${estudiante.dni}"></span></p>
+
+    <hr />
+
+    <p><b>Centro:</b> <span th:text="${estudiante.centro != null ? estudiante.centro.nombre : '—'}"></span></p>
+    <p><b>Titulación:</b> <span th:text="${estudiante.titulacion != null ? estudiante.titulacion.nombre : '—'}"></span>
+    </p>
+    <p><b>Convenio:</b> <span th:text="${estudiante.convenio != null ? estudiante.convenio.nombre : '—'}"></span></p>
+
+    <p>
+        <b>Tutor empresa actual:</b>
+        <span
+            th:text="${estudiante.tutorEmpresa != null ? estudiante.tutorEmpresa.nombre + ' ' + estudiante.tutorEmpresa.apellidos : 'Sin tutor asignado'}"></span>
+    </p>
+
+    <hr />
+
+    <p><b>Inicio prácticas:</b> <span
+            th:text="${estudiante.fechaInicioPracticas != null ? estudiante.fechaInicioPracticas : '—'}"></span></p>
+    <p><b>Fin prácticas:</b> <span
+            th:text="${estudiante.fechaFinPracticas != null ? estudiante.fechaFinPracticas : '—'}"></span></p>
+
+    <p><b>Activo:</b> <span th:text="${estudiante.activo ? 'Sí' : 'No'}"></span></p>
+
+    <hr />
+
+    <a th:href="@{/estudiantes/editar/{id}(id=${estudiante.id})}">Editar</a>
+    |
+    <a th:href="@{/estudiantes/{id}/historial-tutor(id=${estudiante.id})}">Historial tutor</a>
+    |
+    <a th:href="@{/estudiantes}">Volver al listado</a>
+
+</body>
+
+</html>

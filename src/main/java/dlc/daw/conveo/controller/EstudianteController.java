@@ -69,6 +69,12 @@ public class EstudianteController {
         return "estudiantes/lista";
     }
 
+    @GetMapping("/{id}")
+    public String detalle(@PathVariable Long id, Model model) {
+        model.addAttribute("estudiante", estudianteService.buscarPorId(id));
+        return "estudiantes/detalle";
+    }
+
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("estudiante", new Estudiante());
