@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Tutores Empresa</title></head>
+
+<head>
+    <title>Tutores Empresa</title>
+</head>
+
 <body>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
-<h1>Tutores Empresa</h1>
-<a th:href="@{/tutores-empresa/nuevo}">Nuevo Tutor Empresa</a>
+    <h1>Tutores Empresa</h1>
+    <a th:href="@{/tutores-empresa/nuevo}">Nuevo Tutor Empresa</a>
+    <div th:if="${mensaje != null}" style="padding:10px; border:1px solid #4caf50; margin:10px 0;">
+        <span th:text="${mensaje}"></span>
+    </div>
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>DNI</th>
+            <th>Cargo</th>
+            <th>Acciones</th>
+        </tr>
+        <tr th:each="t : ${tutores}">
+            <td th:text="${t.nombre} + ' ' + ${t.apellidos}"></td>
+            <td th:text="${t.email}"></td>
+            <td th:text="${t.dni}"></td>
+            <td th:text="${t.cargoEmpresa}"></td>
+            <td>
+                <a th:href="@{/tutores-empresa/editar/{id}(id=${t.id})}">Editar</a>
+                |
+                <a th:href="@{/tutores-empresa/eliminar/{id}(id=${t.id})}"
+                    onclick="return confirm('Este tutor puede tener estudiantes asignados. Si lo eliminas, sus estudiantes pasarán a no tener tutor asignado. ¿Continuar?');">Eliminar</a>
+            </td>
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>DNI</th>
-        <th>Cargo</th>
-    </tr>
-    <tr th:each="t : ${tutores}">
-        <td th:text="${t.nombre} + ' ' + ${t.apellidos}"></td>
-        <td th:text="${t.email}"></td>
-        <td th:text="${t.dni}"></td>
-        <td th:text="${t.cargoEmpresa}"></td>
-    </tr>
-</table>
+        </tr>
+    </table>
 
 </body>
+
 </html>

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-
+<div th:replace="fragments/navbar :: navbar"></div>
     <h1>Nuevo Estudiante</h1>
 
     <form th:action="@{/estudiantes/guardar}" th:object="${estudiante}" method="post">

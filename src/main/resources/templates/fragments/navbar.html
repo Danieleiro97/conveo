@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="navbar" style="padding:10px; border-bottom:1px solid #ccc; margin-bottom:15px;">
+    <a th:href="@{/}" style="margin-right:10px;">Inicio</a>
+
+    <!-- ADMIN -->
+    <span sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/centros}" style="margin-right:10px;">Centros</a>
+        <a th:href="@{/convenios}" style="margin-right:10px;">Convenios</a>
+        <a th:href="@{/estudiantes}" style="margin-right:10px;">Estudiantes</a>
+        <a th:href="@{/titulaciones}" style="margin-right:10px;">Titulaciones</a>
+        <a th:href="@{/tutores-empresa}" style="margin-right:10px;">Tutores empresa</a>
+    </span>
+
+    <!-- RRHH -->
+    <span sec:authorize="hasRole('RRHH')">
+        <a th:href="@{/estudiantes}" style="margin-right:10px;">Estudiantes</a>
+    </span>
+
+    <!-- TUTOR_EMPRESA -->
+    <span sec:authorize="hasRole('TUTOR_EMPRESA')">
+        <a th:href="@{/mis-estudiantes}" style="margin-right:10px;">Mis estudiantes</a>
+    </span>
+
+    <span style="float:right;">
+        <span sec:authorize="isAuthenticated()">
+            <span style="margin-right:10px;">
+                Usuario: <b sec:authentication="name"></b>
+            </span>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit">Salir</button>
+            </form>
+        </span>
+    </span>
+</nav>
+
+</body>
+</html>

@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Nuevo Tutor Empresa</title></head>
+
+<head>
+    <title>Tutor Empresa</title>
+</head>
+
 <body>
 
-<h1>Nuevo Tutor Empresa</h1>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
-<form th:action="@{/tutores-empresa/guardar}" th:object="${tutor}" method="post">
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" /><br/>
+    <h1 th:text="${tutor.id == null ? 'Nuevo Tutor Empresa' : 'Editar Tutor Empresa'}"></h1>
 
-    <label>Apellidos:</label>
-    <input type="text" th:field="*{apellidos}" /><br/>
+    <form th:action="@{/tutores-empresa/guardar}" th:object="${tutor}" method="post">
 
-    <label>Email:</label>
-    <input type="email" th:field="*{email}" /><br/>
+        <input type="hidden" th:field="*{id}" />
 
-    <label>DNI:</label>
-    <input type="text" th:field="*{dni}" /><br/>
+        <label>Nombre:</label>
+        <input type="text" th:field="*{nombre}" /><br />
 
-    <label>Cargo:</label>
-    <input type="text" th:field="*{cargoEmpresa}" /><br/>
+        <label>Apellidos:</label>
+        <input type="text" th:field="*{apellidos}" /><br />
 
-    <label>Contraseña (login):</label>
-    <input type="password" name="password" /><br/>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" /><br />
 
-    <button type="submit">Guardar</button>
-</form>
+        <label>DNI:</label>
+        <input type="text" th:field="*{dni}" /><br />
 
-<a th:href="@{/tutores-empresa}">Volver</a>
+        <label>Cargo:</label>
+        <input type="text" th:field="*{cargoEmpresa}" /><br />
+
+        <div th:if="${tutor.id == null}">
+            <label>Contraseña (login):</label>
+            <input type="password" name="password" /><br />
+        </div>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a th:href="@{/tutores-empresa}">Volver</a>
+
 </body>
+
 </html>
