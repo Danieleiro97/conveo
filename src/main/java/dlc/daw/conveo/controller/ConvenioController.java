@@ -1,5 +1,6 @@
 package dlc.daw.conveo.controller;
 
+import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Convenio;
 import dlc.daw.conveo.service.ConvenioService;
 import dlc.daw.conveo.service.TitulacionService;
@@ -42,12 +43,31 @@ public class ConvenioController {
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Convenio convenio,
-            @RequestParam Long centroId, @RequestParam Long titulacionId) {
+            @RequestParam Long centroId,
+            @RequestParam(required = false) Long titulacionId,
+            Model model) {
 
         convenio.setCentro(centroService.buscarPorId(centroId));
-        convenio.setTitulacion(titulacionService.buscarPorId(titulacionId));
-        convenioService.guardar(convenio);
-        return "redirect:/convenios";
+        if (titulacionId != null)
+            convenio.setTitulacion(titulacionService.buscarPorId(titulacionId));
+        else
+            convenio.setTitulacion(null);
+
+        try {
+            convenioService.guardarValidando(convenio);
+            return "redirect:/convenios";
+        } catch (ReglaNegocioException ex) {
+
+            // Recargar listas del formulario
+            model.addAttribute("centros", centroService.listarTodos());
+            model.addAttribute("titulaciones", titulacionService.listarTodas());
+
+            // Mensaje de error
+            model.addAttribute("errorRegla", ex.getMessage());
+
+            // Volvemos al mismo formulario
+            return "convenios/formulario";
+        }
     }
 
     @GetMapping("/eliminar/{id}")

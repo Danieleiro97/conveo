@@ -6,8 +6,10 @@
 </head>
 
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
-
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:if="${errorRegla != null}" style="padding:10px; border:1px solid #f44336; margin:10px 0;">
+        <span th:text="${errorRegla}"></span>
+    </div>
     <h1>Nuevo Convenio</h1>
 
     <form th:action="@{/convenios/guardar}" th:object="${convenio}" method="post">

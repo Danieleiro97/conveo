@@ -10,7 +10,6 @@ import dlc.daw.conveo.model.TutorEmpresa;
 import dlc.daw.conveo.repository.EstudianteRepository;
 import dlc.daw.conveo.repository.TutorEmpresaRepository;
 import dlc.daw.conveo.repository.UsuarioRepository;
-import dlc.daw.conveo.service.AsignacionTutorEmpresaService;
 
 @Service
 public class TutorEmpresaService {
