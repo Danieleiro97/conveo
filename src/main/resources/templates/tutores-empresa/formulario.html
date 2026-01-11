@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Nuevo Tutor Empresa</title></head>
+<body>
+
+<h1>Nuevo Tutor Empresa</h1>
+
+<form th:action="@{/tutores-empresa/guardar}" th:object="${tutor}" method="post">
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" /><br/>
+
+    <label>Apellidos:</label>
+    <input type="text" th:field="*{apellidos}" /><br/>
+
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" /><br/>
+
+    <label>DNI:</label>
+    <input type="text" th:field="*{dni}" /><br/>
+
+    <label>Cargo:</label>
+    <input type="text" th:field="*{cargoEmpresa}" /><br/>
+
+    <label>Contraseña (login):</label>
+    <input type="password" name="password" /><br/>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a th:href="@{/tutores-empresa}">Volver</a>
+</body>
+</html>

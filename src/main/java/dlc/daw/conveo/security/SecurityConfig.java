@@ -25,6 +25,7 @@ public class SecurityConfig {
                 // accesoss por roles (ajustable)
                 .requestMatchers("/centros/**").hasRole("ADMIN")
                 .requestMatchers("/convenios/**").hasRole("ADMIN")
+                .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
                 .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
                 .requestMatchers("/mis-estudiantes").hasRole("TUTOR_EMPRESA")
                 // resto
