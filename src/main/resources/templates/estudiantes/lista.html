@@ -18,6 +18,7 @@
             <th>Email</th>
             <th>Centro</th>
             <th>Titulación</th>
+            <th>Tutor empresa</th>
             <th>Inicio Prácticas</th>
             <th>Fin Prácticas</th>
             <th>Acciones</th>
@@ -28,6 +29,7 @@
             <td th:text="${e.email}"></td>
             <td th:text="${e.centro.nombre}"></td>
             <td th:text="${e.titulacion.nombre}"></td>
+            <td th:text="${e.tutorEmpresa != null ? e.tutorEmpresa.nombre + ' ' + e.tutorEmpresa.apellidos : '—'}"></td>
             <td th:text="${#temporals.format(e.fechaInicioPracticas, 'dd/MM/yyyy')}"></td>
             <td th:text="${#temporals.format(e.fechaFinPracticas, 'dd/MM/yyyy')}"></td>
             <td>

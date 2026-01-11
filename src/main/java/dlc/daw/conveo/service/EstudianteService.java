@@ -30,4 +30,9 @@ public class EstudianteService {
     public Estudiante buscarPorId(Long id) {
         return estudianteRepository.findById(id).orElse(null);
     }
+
+    public List<Estudiante> listarPorTutorEmpresa(Long tutorEmpresaId) {
+        return estudianteRepository.findByTutorEmpresa_Id(tutorEmpresaId);
+    }
+
 }

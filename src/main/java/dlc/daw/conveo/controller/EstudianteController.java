@@ -1,14 +1,20 @@
 package dlc.daw.conveo.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import dlc.daw.conveo.model.Estudiante;
+import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.ConvenioService;
 import dlc.daw.conveo.service.EstudianteService;
 import dlc.daw.conveo.service.TitulacionService;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import dlc.daw.conveo.service.CentroService;
+import dlc.daw.conveo.service.TutorEmpresaService;
 
 @Controller
 @RequestMapping("/estudiantes")
@@ -18,15 +24,18 @@ public class EstudianteController {
     private final ConvenioService convenioService;
     private final CentroService centroService;
     private final TitulacionService titulacionService;
+    private final TutorEmpresaService tutorEmpresaService;
 
     public EstudianteController(EstudianteService estudianteService,
             ConvenioService convenioService,
             CentroService centroService,
-            TitulacionService titulacionService) {
+            TitulacionService titulacionService,
+            TutorEmpresaService tutorEmpresaService) {
         this.estudianteService = estudianteService;
         this.convenioService = convenioService;
         this.centroService = centroService;
         this.titulacionService = titulacionService;
+        this.tutorEmpresaService = tutorEmpresaService;
     }
 
     @GetMapping
@@ -41,6 +50,7 @@ public class EstudianteController {
         model.addAttribute("centros", centroService.listarTodos());
         model.addAttribute("convenios", convenioService.listarTodos());
         model.addAttribute("titulaciones", titulacionService.listarTodas());
+        model.addAttribute("tutoresEmpresa", tutorEmpresaService.listarTodos());
 
         return "estudiantes/formulario";
     }
@@ -49,7 +59,8 @@ public class EstudianteController {
     public String guardar(@ModelAttribute Estudiante estudiante,
             @RequestParam Long centroId,
             @RequestParam Long titulacionId,
-            @RequestParam(required = false) Long convenioId) {
+            @RequestParam(required = false) Long convenioId,
+            @RequestParam(required = false) Long tutorEmpresaId) {
 
         estudiante.setCentro(centroService.buscarPorId(centroId));
         estudiante.setTitulacion(titulacionService.buscarPorId(titulacionId));
@@ -59,7 +70,11 @@ public class EstudianteController {
         } else {
             estudiante.setConvenio(null);
         }
-
+        if (tutorEmpresaId != null) {
+            estudiante.setTutorEmpresa(tutorEmpresaService.buscarPorId(tutorEmpresaId));
+        } else {
+            estudiante.setTutorEmpresa(null);
+        }
         estudianteService.guardar(estudiante);
         return "redirect:/estudiantes";
     }
@@ -76,6 +91,7 @@ public class EstudianteController {
         model.addAttribute("convenios", convenioService.listarTodos());
         model.addAttribute("centros", centroService.listarTodos());
         model.addAttribute("titulaciones", titulacionService.listarTodas());
+        model.addAttribute("tutoresEmpresa", tutorEmpresaService.listarTodos());
         return "estudiantes/formulario";
     }
 }

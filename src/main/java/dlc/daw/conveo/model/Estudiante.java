@@ -42,4 +42,9 @@ public class Estudiante {
     @ManyToOne
     @JoinColumn(name = "convenio_id")
     private Convenio convenio;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_empresa_id", nullable = true)
+    private TutorEmpresa tutorEmpresa;
+
 }

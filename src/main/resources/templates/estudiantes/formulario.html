@@ -47,6 +47,13 @@
                 th:selected="${estudiante.titulacion != null and estudiante.titulacion.id == t.id}">
             </option>
         </select><br />
+        <label>Tutor empresa:</label>
+        <select name="tutorEmpresaId">
+            <option value="">-- Sin tutor empresa --</option>
+            <option th:each="t : ${tutoresEmpresa}" th:value="${t.id}" th:text="${t.nombre} + ' ' + ${t.apellidos}"
+                th:selected="${estudiante.tutorEmpresa != null and estudiante.tutorEmpresa.id == t.id}">
+            </option>
+        </select><br />
         <label>Convenio:</label>
         <select name="convenioId">
             <option value="">-- Selecciona un convenio --</option>
