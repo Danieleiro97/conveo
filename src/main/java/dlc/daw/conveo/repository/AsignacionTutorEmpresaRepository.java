@@ -11,6 +11,6 @@ public interface AsignacionTutorEmpresaRepository extends JpaRepository<Asignaci
     Optional<AsignacionTutorEmpresa> findFirstByEstudiante_IdAndFechaFinIsNull(Long estudianteId);
 
     List<AsignacionTutorEmpresa> findByEstudiante_IdOrderByFechaInicioDesc(Long estudianteId);
-
+    List<AsignacionTutorEmpresa> findByTutorEmpresa_IdOrderByFechaInicioDesc(Long tutorEmpresaId);
     long countByTutorEmpresa_IdAndFechaFinIsNull(Long tutorEmpresaId);
 }

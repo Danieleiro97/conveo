@@ -28,6 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
                         .requestMatchers("/estudiantes/*/historial-tutor").hasAnyRole("ADMIN", "RRHH")
                         .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
+                        .requestMatchers("/mi-historial-estudiantes").hasRole("TUTOR_EMPRESA")
                         .requestMatchers("/mis-estudiantes").hasRole("TUTOR_EMPRESA")
                         // resto
                         .anyRequest().authenticated())

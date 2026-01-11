@@ -51,7 +51,11 @@ public class AsignacionTutorEmpresaService {
     }
 
     public java.util.List<dlc.daw.conveo.model.AsignacionTutorEmpresa> historialPorEstudiante(Long estudianteId) {
-    return repo.findByEstudiante_IdOrderByFechaInicioDesc(estudianteId);
+        return repo.findByEstudiante_IdOrderByFechaInicioDesc(estudianteId);
+    }
+
+        public java.util.List<dlc.daw.conveo.model.AsignacionTutorEmpresa> historialPorTutor(Long tutorId) {
+    return repo.findByTutorEmpresa_IdOrderByFechaInicioDesc(tutorId);
 }
 
 

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mi historial de estudiantes</title>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h1>Mi historial de estudiantes</h1>
+
+<table border="1" style="width:100%; border-collapse:collapse;">
+    <tr>
+        <th>Estudiante</th>
+        <th>Email</th>
+        <th>Centro</th>
+        <th>Inicio asignación</th>
+        <th>Fin asignación</th>
+        <th>Estado</th>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(historial)}">
+        <td colspan="6">No hay histórico todavía.</td>
+    </tr>
+
+    <tr th:each="h : ${historial}">
+        <td th:text="${h.estudiante.nombre} + ' ' + ${h.estudiante.apellidos}"></td>
+        <td th:text="${h.estudiante.email}"></td>
+        <td th:text="${h.estudiante.centro.nombre}"></td>
+        <td th:text="${h.fechaInicio}"></td>
+        <td th:text="${h.fechaFin != null ? h.fechaFin : '—'}"></td>
+        <td th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

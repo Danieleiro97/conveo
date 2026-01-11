@@ -40,6 +40,8 @@
                     onclick="return confirm('¿Desactivar tutor? No se borrará, quedará como histórico y no podrá iniciar sesión.');">
                     Desactivar
                 </a>
+                | <a th:href="@{/tutores-empresa/{id}/historial-estudiantes(id=${t.id})}">Historial estudiantes</a>
+
             </td>
 
         </tr>
