@@ -10,8 +10,12 @@
 
     <h1>Tutores Empresa</h1>
     <a th:href="@{/tutores-empresa/nuevo}">Nuevo Tutor Empresa</a>
-    <div th:if="${mensaje != null}" style="padding:10px; border:1px solid #4caf50; margin:10px 0;">
-        <span th:text="${mensaje}"></span>
+    <div th:if="${mensajeOk != null}" style="padding:10px; border:1px solid #4caf50; margin:10px 0;">
+        <span th:text="${mensajeOk}"></span>
+    </div>
+
+    <div th:if="${mensajeError != null}" style="padding:10px; border:1px solid #f44336; margin:10px 0;">
+        <span th:text="${mensajeError}"></span>
     </div>
     <table border="1">
         <tr>
@@ -29,8 +33,13 @@
             <td>
                 <a th:href="@{/tutores-empresa/editar/{id}(id=${t.id})}">Editar</a>
                 |
-                <a th:href="@{/tutores-empresa/eliminar/{id}(id=${t.id})}"
-                    onclick="return confirm('Este tutor puede tener estudiantes asignados. Si lo eliminas, sus estudiantes pasarán a no tener tutor asignado. ¿Continuar?');">Eliminar</a>
+                <span th:if="${!t.activo}">
+                    | <a th:href="@{/tutores-empresa/activar/{id}(id=${t.id})}">Activar</a>
+                </span>
+                <a th:href="@{/tutores-empresa/desactivar/{id}(id=${t.id})}"
+                    onclick="return confirm('¿Desactivar tutor? No se borrará, quedará como histórico y no podrá iniciar sesión.');">
+                    Desactivar
+                </a>
             </td>
 
         </tr>

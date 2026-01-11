@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dlc.daw.conveo.model.Estudiante;
+import dlc.daw.conveo.model.TutorEmpresa;
+import dlc.daw.conveo.service.AsignacionTutorEmpresaService;
 import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.ConvenioService;
 import dlc.daw.conveo.service.EstudianteService;
@@ -25,17 +27,20 @@ public class EstudianteController {
     private final CentroService centroService;
     private final TitulacionService titulacionService;
     private final TutorEmpresaService tutorEmpresaService;
+    private final AsignacionTutorEmpresaService asignacionTutorEmpresaService;
 
     public EstudianteController(EstudianteService estudianteService,
             ConvenioService convenioService,
             CentroService centroService,
             TitulacionService titulacionService,
-            TutorEmpresaService tutorEmpresaService) {
+            TutorEmpresaService tutorEmpresaService,
+            AsignacionTutorEmpresaService asignacionTutorEmpresaService) {
         this.estudianteService = estudianteService;
         this.convenioService = convenioService;
         this.centroService = centroService;
         this.titulacionService = titulacionService;
         this.tutorEmpresaService = tutorEmpresaService;
+        this.asignacionTutorEmpresaService = asignacionTutorEmpresaService;
     }
 
     @GetMapping
@@ -65,17 +70,25 @@ public class EstudianteController {
         estudiante.setCentro(centroService.buscarPorId(centroId));
         estudiante.setTitulacion(titulacionService.buscarPorId(titulacionId));
 
-        if (convenioId != null) {
+        if (convenioId != null)
             estudiante.setConvenio(convenioService.buscarPorId(convenioId));
-        } else {
+        else
             estudiante.setConvenio(null);
-        }
-        if (tutorEmpresaId != null) {
-            estudiante.setTutorEmpresa(tutorEmpresaService.buscarPorId(tutorEmpresaId));
-        } else {
-            estudiante.setTutorEmpresa(null);
-        }
+
+        TutorEmpresa nuevoTutor = (tutorEmpresaId != null)
+                ? tutorEmpresaService.buscarPorId(tutorEmpresaId)
+                : null;
+
+        // 1) Guardar primero (asegura ID si es nuevo)
         estudianteService.guardar(estudiante);
+
+        // 2) Registrar histórico (usa estudiante.getId())
+        asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, nuevoTutor);
+
+        // 3) Setear tutor actual y guardar
+        estudiante.setTutorEmpresa(nuevoTutor);
+        estudianteService.guardar(estudiante);
+
         return "redirect:/estudiantes";
     }
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Historial tutor empresa</title>
+</head>
+
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <h1>Historial de tutor empresa</h1>
+
+    <h3 th:text="'Estudiante: '+${estudiante.nombre} + ' ' + ${estudiante.apellidos}"></h3>
+    <p>
+        <b>Email:</b> <span th:text="${estudiante.email}"></span> |
+        <b>Centro:</b> <span th:text="${estudiante.centro.nombre}"></span>
+    </p>
+
+    <table border="1" style="width:100%; border-collapse:collapse;">
+        <tr>
+            <th>Tutor</th>
+            <th>Email tutor</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Estado</th>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(historial)}">
+            <td colspan="5">No hay histórico de tutorías para este estudiante.</td>
+        </tr>
+
+        <tr th:each="h : ${historial}">
+            <td th:text="${h.tutorEmpresa.nombre} + ' ' + ${h.tutorEmpresa.apellidos}"></td>
+            <td th:text="${h.tutorEmpresa.email}"></td>
+            <td th:text="${h.fechaInicio}"></td>
+            <td th:text="${h.fechaFin != null ? h.fechaFin : '—'}"></td>
+            <td th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}"></td>
+        </tr>
+    </table>
+
+    <br />
+    <a th:href="@{/estudiantes}">Volver</a>
+
+</body>
+
+</html>

@@ -18,24 +18,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .authorizeHttpRequests(auth -> auth
-                // estáticos
-                .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        // estáticos
+                        .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
 
-                // accesoss por roles (ajustable)
-                .requestMatchers("/centros/**").hasRole("ADMIN")
-                .requestMatchers("/convenios/**").hasRole("ADMIN")
-                .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
-                .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
-                .requestMatchers("/mis-estudiantes").hasRole("TUTOR_EMPRESA")
-                // resto
-                .anyRequest().authenticated()
-            )
-            .formLogin(login -> login
-                .defaultSuccessUrl("/estudiantes", true)
-                .permitAll()
-            )
-            .logout(logout -> logout.permitAll());
+                        // accesoss por roles (ajustable)
+                        .requestMatchers("/centros/**").hasRole("ADMIN")
+                        .requestMatchers("/convenios/**").hasRole("ADMIN")
+                        .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
+                        .requestMatchers("/estudiantes/*/historial-tutor").hasAnyRole("ADMIN", "RRHH")
+                        .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
+                        .requestMatchers("/mis-estudiantes").hasRole("TUTOR_EMPRESA")
+                        // resto
+                        .anyRequest().authenticated())
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/estudiantes", true)
+                        .permitAll())
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }

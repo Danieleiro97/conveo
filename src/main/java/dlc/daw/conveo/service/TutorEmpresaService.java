@@ -1,22 +1,33 @@
 package dlc.daw.conveo.service;
 
-import dlc.daw.conveo.model.TutorEmpresa;
-import dlc.daw.conveo.repository.TutorEmpresaRepository;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
-import dlc.daw.conveo.repository.EstudianteRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import dlc.daw.conveo.model.TutorEmpresa;
+import dlc.daw.conveo.repository.EstudianteRepository;
+import dlc.daw.conveo.repository.TutorEmpresaRepository;
+import dlc.daw.conveo.repository.UsuarioRepository;
+import dlc.daw.conveo.service.AsignacionTutorEmpresaService;
 
 @Service
 public class TutorEmpresaService {
 
     private final TutorEmpresaRepository repo;
     private final EstudianteRepository estudianteRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final AsignacionTutorEmpresaService asignacionTutorEmpresaService;
 
-    public TutorEmpresaService(TutorEmpresaRepository repo, EstudianteRepository estudianteRepository) {
+    public TutorEmpresaService(TutorEmpresaRepository repo,
+            EstudianteRepository estudianteRepository,
+            UsuarioRepository usuarioRepository,
+            AsignacionTutorEmpresaService asignacionTutorEmpresaService) {
         this.repo = repo;
         this.estudianteRepository = estudianteRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.asignacionTutorEmpresaService = asignacionTutorEmpresaService;
     }
 
     public List<TutorEmpresa> listarTodos() {
@@ -53,4 +64,61 @@ public class TutorEmpresaService {
         return activos;
     }
 
+    @Transactional
+    public void eliminarSiNoTieneActivos(Long tutorId) {
+        long activos = estudianteRepository.countByTutorEmpresa_IdAndActivoTrue(tutorId);
+        if (activos > 0) {
+            throw new IllegalStateException("NO_SE_PUEDE_BORRAR_TIENE_ACTIVOS:" + activos);
+        }
+
+        TutorEmpresa tutor = repo.findById(tutorId).orElse(null);
+        if (tutor == null)
+            return;
+
+        // 1) borrar tutor
+        repo.delete(tutor);
+
+        // 2) borrar usuario asociado (si existe)
+        if (tutor.getUsuario() != null) {
+            usuarioRepository.deleteById(tutor.getUsuario().getId());
+        }
+    }
+
+    @Transactional
+    public void desactivarSiNoTieneAsignacionesActivas(Long tutorId) {
+
+        long activas = asignacionTutorEmpresaService.contarAsignacionesActivasDelTutor(tutorId);
+        if (activas > 0) {
+            throw new IllegalStateException("NO_SE_PUEDE_DESACTIVAR_TIENE_ASIGNACIONES_ACTIVAS:" + activas);
+        }
+
+        TutorEmpresa tutor = repo.findById(tutorId).orElse(null);
+        if (tutor == null)
+            return;
+
+        tutor.setActivo(false);
+        tutor.setFechaBaja(LocalDate.now());
+        repo.save(tutor);
+
+        if (tutor.getUsuario() != null) {
+            tutor.getUsuario().setActivo(false);
+            usuarioRepository.save(tutor.getUsuario());
+        }
+    }
+
+    @Transactional
+    public void activarTutor(Long tutorId) {
+        TutorEmpresa tutor = repo.findById(tutorId).orElse(null);
+        if (tutor == null)
+            return;
+
+        tutor.setActivo(true);
+        tutor.setFechaBaja(null);
+        repo.save(tutor);
+
+        if (tutor.getUsuario() != null) {
+            tutor.getUsuario().setActivo(true);
+            usuarioRepository.save(tutor.getUsuario());
+        }
+    }
 }

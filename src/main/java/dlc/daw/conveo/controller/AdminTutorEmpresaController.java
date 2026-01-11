@@ -66,18 +66,46 @@ public class AdminTutorEmpresaController {
 
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
-
-        long activos = tutorEmpresaService.eliminarTutorEmpresaDesasignandoEstudiantes(id);
-
-        if (activos > 0) {
-            ra.addFlashAttribute("mensaje",
-                    "El tutor se ha eliminado. Tenía " + activos
-                            + " estudiante(s) en activo, que han pasado a no tener tutor asignado.");
-        } else {
-            ra.addFlashAttribute("mensaje",
-                    "El tutor se ha eliminado. Los estudiantes asignados (si existían) han pasado a no tener tutor asignado.");
+        try {
+            tutorEmpresaService.eliminarSiNoTieneActivos(id);
+            ra.addFlashAttribute("mensajeOk",
+                    "Tutor eliminado correctamente. También se ha eliminado su usuario asociado.");
+        } catch (IllegalStateException ex) {
+            if (ex.getMessage() != null && ex.getMessage().startsWith("NO_SE_PUEDE_BORRAR_TIENE_ACTIVOS:")) {
+                String n = ex.getMessage().split(":")[1];
+                ra.addFlashAttribute("mensajeError",
+                        "No se puede eliminar el tutor: tiene " + n + " estudiante(s) en activo asignado(s). " +
+                                "Desasigna esos estudiantes o finaliza sus prácticas para poder eliminarlo.");
+            } else {
+                ra.addFlashAttribute("mensajeError", "No se puede eliminar el tutor por una restricción.");
+            }
         }
+        return "redirect:/tutores-empresa";
+    }
 
+    @GetMapping("/desactivar/{id}")
+    public String desactivar(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            tutorEmpresaService.desactivarSiNoTieneAsignacionesActivas(id);
+            ra.addFlashAttribute("mensajeOk", "Tutor desactivado. Ya no podrá iniciar sesión.");
+        } catch (IllegalStateException ex) {
+            if (ex.getMessage() != null
+                    && ex.getMessage().startsWith("NO_SE_PUEDE_DESACTIVAR_TIENE_ASIGNACIONES_ACTIVAS:")) {
+                String n = ex.getMessage().split(":")[1];
+                ra.addFlashAttribute("mensajeError",
+                        "No se puede desactivar: el tutor tiene " + n + " asignación(es) activa(s). " +
+                                "Desasigna esos estudiantes primero.");
+            } else {
+                ra.addFlashAttribute("mensajeError", "No se puede desactivar por una restricción.");
+            }
+        }
+        return "redirect:/tutores-empresa";
+    }
+
+    @GetMapping("/activar/{id}")
+    public String activar(@PathVariable Long id, RedirectAttributes ra) {
+        tutorEmpresaService.activarTutor(id);
+        ra.addFlashAttribute("mensajeOk", "Tutor activado.");
         return "redirect:/tutores-empresa";
     }
 

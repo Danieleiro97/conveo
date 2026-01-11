@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <h1>Listado de Estudiantes</h1>
 
@@ -34,13 +34,12 @@
             <td th:text="${#temporals.format(e.fechaInicioPracticas, 'dd/MM/yyyy')}"></td>
             <td th:text="${#temporals.format(e.fechaFinPracticas, 'dd/MM/yyyy')}"></td>
             <td>
-                <a th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a>
-                |
+                <a th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a> |
+                <a th:href="@{/estudiantes/{id}/historial-tutor(id=${e.id})}">Historial tutor</a> |
                 <a th:href="@{/estudiantes/eliminar/{id}(id=${e.id})}"
-                    onclick="return confirm('¿Eliminar estudiante?');">
-                    Eliminar
-                </a>
+                    onclick="return confirm('¿Eliminar estudiante?');">Eliminar</a>
             </td>
+
         </tr>
     </table>
 
