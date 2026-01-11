@@ -20,7 +20,7 @@ public class EstudianteService {
         return estudianteRepository.findAll();
     }
 
-        public List<Estudiante> listarPorTutorEmpresa(Long tutorEmpresaId) {
+    public List<Estudiante> listarPorTutorEmpresa(Long tutorEmpresaId) {
         return estudianteRepository.findByTutorEmpresa_Id(tutorEmpresaId);
     }
 
@@ -28,6 +28,9 @@ public class EstudianteService {
         return estudianteRepository.findByConvenio_IdOrderByApellidosAscNombreAsc(convenioId);
     }
 
+    public List<Estudiante> listarPorCentro(Long centroId) {
+        return estudianteRepository.findByCentro_IdOrderByApellidosAscNombreAsc(centroId);
+    }
 
     public List<Estudiante> buscarConFiltros(Long centroId, Long titulacionId, Long convenioId, Boolean activo,
             Boolean tutorAsignado) {
@@ -45,7 +48,6 @@ public class EstudianteService {
     public Estudiante buscarPorId(Long id) {
         return estudianteRepository.findById(id).orElse(null);
     }
-
 
     public void guardarValidando(Estudiante e) {
 

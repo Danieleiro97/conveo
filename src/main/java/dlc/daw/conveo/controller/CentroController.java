@@ -4,6 +4,8 @@ import dlc.daw.conveo.model.Centro;
 import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.CentroTitulacionService;
 import dlc.daw.conveo.service.TitulacionService;
+import dlc.daw.conveo.service.ConvenioService;
+import dlc.daw.conveo.service.EstudianteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +17,19 @@ public class CentroController {
     private final CentroService centroService;
     private final TitulacionService titulacionService;
     private final CentroTitulacionService centroTitulacionService;
+    private final ConvenioService convenioService;
+    private final EstudianteService estudianteService;
 
     public CentroController(CentroService centroService,
             TitulacionService titulacionService,
-            CentroTitulacionService centroTitulacionService) {
+            CentroTitulacionService centroTitulacionService,
+            ConvenioService convenioService,
+            EstudianteService estudianteService) {
         this.centroService = centroService;
         this.titulacionService = titulacionService;
         this.centroTitulacionService = centroTitulacionService;
+        this.convenioService = convenioService;
+        this.estudianteService = estudianteService;
     }
 
     @GetMapping
@@ -46,6 +54,19 @@ public class CentroController {
 
         model.addAttribute("titulacionesPorCentro", titulosPorCentro);
         return "centros/lista";
+    }
+
+    @GetMapping("/{id}")
+    public String detalle(@PathVariable Long id, Model model) {
+        var centro = centroService.buscarPorId(id);
+
+        model.addAttribute("centro", centro);
+        model.addAttribute("convenioActivo", convenioService.buscarActivoPorCentro(id));
+        model.addAttribute("convenios", convenioService.listarPorCentro(id));
+        model.addAttribute("estudiantes", estudianteService.listarPorCentro(id));
+        model.addAttribute("titulacionesCentro", centroTitulacionService.listarPorCentro(id));
+
+        return "centros/detalle";
     }
 
     @GetMapping("/nuevo")

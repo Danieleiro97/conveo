@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <h1>Centros</h1>
 
@@ -32,6 +32,7 @@
 
             <td th:text="${c.activo}"></td>
             <td>
+                <a th:href="@{/centros/{id}(id=${c.id})}">Ver</a> |
                 <a th:href="@{/centros/editar/{id}(id=${c.id})}">Editar</a>
                 |
                 <a th:href="@{/centros/eliminar/{id}(id=${c.id})}" onclick="return confirm('¿Eliminar centro?');">

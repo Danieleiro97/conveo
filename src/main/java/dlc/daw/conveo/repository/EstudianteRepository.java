@@ -41,4 +41,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
             @Param("tutorAsignado") Boolean tutorAsignado);
 
     List<Estudiante> findByConvenio_IdOrderByApellidosAscNombreAsc(Long convenioId);
+
+    List<Estudiante> findByCentro_IdOrderByApellidosAscNombreAsc(Long centroId);
+
 }

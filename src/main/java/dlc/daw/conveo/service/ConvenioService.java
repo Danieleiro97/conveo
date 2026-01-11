@@ -20,6 +20,14 @@ public class ConvenioService {
         return convenioRepository.findAll();
     }
 
+    public List<Convenio> listarPorCentro(Long centroId) {
+        return convenioRepository.findByCentro_IdOrderByFechaInicioDesc(centroId);
+    }
+
+    public Convenio buscarActivoPorCentro(Long centroId) {
+        return convenioRepository.findFirstByCentro_IdAndActivoTrue(centroId).orElse(null);
+    }
+
     public void guardar(Convenio convenio) {
         convenioRepository.save(convenio);
     }
