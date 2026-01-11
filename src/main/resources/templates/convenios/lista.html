@@ -30,6 +30,7 @@
             <td th:text="${c.fechaFin}"></td>
             <td th:text="${c.activo}"></td>
             <td>
+                <a th:href="@{/convenios/{id}(id=${c.id})}">Ver</a> |
                 <a th:href="@{/convenios/editar/{id}(id=${c.id})}">Editar</a>
                 |
                 <a th:href="@{/convenios/eliminar/{id}(id=${c.id})}"

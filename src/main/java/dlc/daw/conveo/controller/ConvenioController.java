@@ -3,6 +3,7 @@ package dlc.daw.conveo.controller;
 import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Convenio;
 import dlc.daw.conveo.service.ConvenioService;
+import dlc.daw.conveo.service.EstudianteService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,16 +18,27 @@ public class ConvenioController {
 
     private final CentroService centroService;
 
+    private final EstudianteService estudianteService;
+
     public ConvenioController(ConvenioService convenioService,
-            CentroService centroService) {
+            CentroService centroService, EstudianteService estudianteService) {
         this.convenioService = convenioService;
         this.centroService = centroService;
+        this.estudianteService = estudianteService;
     }
 
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("convenios", convenioService.listarTodos());
         return "convenios/lista";
+    }
+
+    @GetMapping("/{id}")
+    public String detalle(@PathVariable Long id, Model model) {
+        var convenio = convenioService.buscarPorId(id);
+        model.addAttribute("convenio", convenio);
+        model.addAttribute("estudiantes", estudianteService.listarPorConvenio(id));
+        return "convenios/detalle";
     }
 
     @GetMapping("/nuevo")

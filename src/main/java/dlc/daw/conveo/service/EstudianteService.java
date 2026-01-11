@@ -20,6 +20,15 @@ public class EstudianteService {
         return estudianteRepository.findAll();
     }
 
+        public List<Estudiante> listarPorTutorEmpresa(Long tutorEmpresaId) {
+        return estudianteRepository.findByTutorEmpresa_Id(tutorEmpresaId);
+    }
+
+    public List<Estudiante> listarPorConvenio(Long convenioId) {
+        return estudianteRepository.findByConvenio_IdOrderByApellidosAscNombreAsc(convenioId);
+    }
+
+
     public List<Estudiante> buscarConFiltros(Long centroId, Long titulacionId, Long convenioId, Boolean activo,
             Boolean tutorAsignado) {
         return estudianteRepository.buscarConFiltros(centroId, titulacionId, convenioId, activo, tutorAsignado);
@@ -37,9 +46,6 @@ public class EstudianteService {
         return estudianteRepository.findById(id).orElse(null);
     }
 
-    public List<Estudiante> listarPorTutorEmpresa(Long tutorEmpresaId) {
-        return estudianteRepository.findByTutorEmpresa_Id(tutorEmpresaId);
-    }
 
     public void guardarValidando(Estudiante e) {
 

@@ -40,4 +40,5 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
             @Param("activo") Boolean activo,
             @Param("tutorAsignado") Boolean tutorAsignado);
 
+    List<Estudiante> findByConvenio_IdOrderByApellidosAscNombreAsc(Long convenioId);
 }
