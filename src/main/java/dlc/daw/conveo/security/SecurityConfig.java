@@ -20,7 +20,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // estáticos
-                        .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 
                         // accesoss por roles (ajustable)
                         .requestMatchers("/centros/**").hasRole("ADMIN")

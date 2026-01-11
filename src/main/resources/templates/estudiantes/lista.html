@@ -1,93 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <title>Estudiantes</title>
-</head>
+<head th:replace="~{fragments/head :: head('Estudiantes')}"></head>
+
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
 
-    <h1>Listado de Estudiantes</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <a th:href="@{/estudiantes/nuevo}">Nuevo Estudiante</a>
-    <h2>Filtros</h2>
+    <div class="container">
 
-    <form th:action="@{/estudiantes}" method="get" style="margin-bottom:15px;">
-        <label>Centro:</label>
-        <select name="centroId">
-            <option value="">-- Todos --</option>
-            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
-                th:selected="${centroId != null and centroId == c.id}">
-            </option>
-        </select>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Listado de Estudiantes</h1>
+            <a class="btn btn-primary" th:href="@{/estudiantes/nuevo}">Nuevo Estudiante</a>
+        </div>
 
-        <label style="margin-left:10px;">Titulación:</label>
-        <select name="titulacionId">
-            <option value="">-- Todas --</option>
-            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
-                th:selected="${titulacionId != null and titulacionId == t.id}">
-            </option>
-        </select>
+        <div class="card mb-4">
+            <div class="card-header">
+                <b>Filtros</b>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/estudiantes}" method="get" class="row g-3 align-items-end">
 
-        <label style="margin-left:10px;">Convenio:</label>
-        <select name="convenioId">
-            <option value="">-- Todos --</option>
-            <option th:each="cv : ${convenios}" th:value="${cv.id}" th:text="${cv.nombre}"
-                th:selected="${convenioId != null and convenioId == cv.id}">
-            </option>
-        </select>
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <label class="form-label">Centro</label>
+                        <select class="form-select" name="centroId">
+                            <option value="">-- Todos --</option>
+                            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
+                                th:selected="${centroId != null and centroId == c.id}">
+                            </option>
+                        </select>
+                    </div>
 
-        <label style="margin-left:10px;">Activo:</label>
-        <select name="activo">
-            <option value="" th:selected="${activo == null}">-- Todos --</option>
-            <option value="true" th:selected="${activo != null and activo}">Sí</option>
-            <option value="false" th:selected="${activo != null and !activo}">No</option>
-        </select>
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <label class="form-label">Titulación</label>
+                        <select class="form-select" name="titulacionId">
+                            <option value="">-- Todas --</option>
+                            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
+                                th:selected="${titulacionId != null and titulacionId == t.id}">
+                            </option>
+                        </select>
+                    </div>
 
-        <label style="margin-left:10px;">Tutor asignado:</label>
-        <select name="tutorAsignado">
-            <option value="" th:selected="${tutorAsignado == null}">-- Todos --</option>
-            <option value="true" th:selected="${tutorAsignado != null and tutorAsignado}">Sí</option>
-            <option value="false" th:selected="${tutorAsignado != null and !tutorAsignado}">No</option>
-        </select>
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <label class="form-label">Convenio</label>
+                        <select class="form-select" name="convenioId">
+                            <option value="">-- Todos --</option>
+                            <option th:each="cv : ${convenios}" th:value="${cv.id}" th:text="${cv.nombre}"
+                                th:selected="${convenioId != null and convenioId == cv.id}">
+                            </option>
+                        </select>
+                    </div>
 
-        <button type="submit" style="margin-left:10px;">Aplicar</button>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <label class="form-label">Activo</label>
+                        <select class="form-select" name="activo">
+                            <option value="" th:selected="${activo == null}">-- Todos --</option>
+                            <option value="true" th:selected="${activo != null and activo}">Sí</option>
+                            <option value="false" th:selected="${activo != null and !activo}">No</option>
+                        </select>
+                    </div>
 
-        <a th:href="@{/estudiantes}" style="margin-left:10px;">Limpiar</a>
-    </form>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <label class="form-label">Tutor asignado</label>
+                        <select class="form-select" name="tutorAsignado">
+                            <option value="" th:selected="${tutorAsignado == null}">-- Todos --</option>
+                            <option value="true" th:selected="${tutorAsignado != null and tutorAsignado}">Sí</option>
+                            <option value="false" th:selected="${tutorAsignado != null and !tutorAsignado}">No</option>
+                        </select>
+                    </div>
 
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Centro</th>
-            <th>Titulación</th>
-            <th>Tutor empresa</th>
-            <th>Inicio Prácticas</th>
-            <th>Fin Prácticas</th>
-            <th>Acciones</th>
-        </tr>
-        <tr th:each="e : ${estudiantes}">
-            <td th:text="${e.id}"></td>
-            <td th:text="${e.nombre} + ' ' + ${e.apellidos}"></td>
-            <td th:text="${e.email}"></td>
-            <td th:text="${e.centro.nombre}"></td>
-            <td th:text="${e.titulacion.nombre}"></td>
-            <td th:text="${e.tutorEmpresa != null ? e.tutorEmpresa.nombre + ' ' + e.tutorEmpresa.apellidos : '—'}"></td>
-            <td th:text="${#temporals.format(e.fechaInicioPracticas, 'dd/MM/yyyy')}"></td>
-            <td th:text="${#temporals.format(e.fechaFinPracticas, 'dd/MM/yyyy')}"></td>
-            <td>
-                <a th:href="@{/estudiantes/{id}(id=${e.id})}">Ver</a> |
-                <a th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a> |
-                <a th:href="@{/estudiantes/{id}/historial-tutor(id=${e.id})}">Historial tutor</a> |
-                <a th:href="@{/estudiantes/eliminar/{id}(id=${e.id})}"
-                    onclick="return confirm('¿Eliminar estudiante?');">Eliminar</a>
-            </td>
+                    <div class="col-12 col-md-4 col-lg-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-100">Aplicar</button>
+                        <a th:href="@{/estudiantes}" class="btn btn-outline-secondary w-100">Limpiar</a>
+                    </div>
 
-        </tr>
-    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 70px;">ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Centro</th>
+                                <th>Titulación</th>
+                                <th>Tutor empresa</th>
+                                <th style="width: 130px;">Inicio</th>
+                                <th style="width: 130px;">Fin</th>
+                                <th style="width: 260px;">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(estudiantes)}">
+                                <td colspan="9" class="text-center py-4">
+                                    No hay estudiantes para los filtros seleccionados.
+                                </td>
+                            </tr>
+
+                            <tr th:each="e : ${estudiantes}">
+                                <td th:text="${e.id}"></td>
+                                <td th:text="${e.nombre} + ' ' + ${e.apellidos}"></td>
+                                <td th:text="${e.email}"></td>
+                                <td th:text="${e.centro != null ? e.centro.nombre : '—'}"></td>
+                                <td th:text="${e.titulacion != null ? e.titulacion.nombre : '—'}"></td>
+                                <td
+                                    th:text="${e.tutorEmpresa != null ? e.tutorEmpresa.nombre + ' ' + e.tutorEmpresa.apellidos : '—'}">
+                                </td>
+
+                                <td
+                                    th:text="${e.fechaInicioPracticas != null ? #temporals.format(e.fechaInicioPracticas, 'dd/MM/yyyy') : '—'}">
+                                </td>
+                                <td
+                                    th:text="${e.fechaFinPracticas != null ? #temporals.format(e.fechaFinPracticas, 'dd/MM/yyyy') : '—'}">
+                                </td>
+
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                            th:href="@{/estudiantes/{id}(id=${e.id})}">Ver</a>
+
+                                        <a class="btn btn-sm btn-outline-primary"
+                                            th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a>
+
+                                        <a class="btn btn-sm btn-outline-info"
+                                            th:href="@{/estudiantes/{id}/historial-tutor(id=${e.id})}">Historial</a>
+
+                                        <a class="btn btn-sm btn-outline-danger"
+                                            th:href="@{/estudiantes/eliminar/{id}(id=${e.id})}"
+                                            onclick="return confirm('¿Eliminar estudiante?');">Eliminar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 
