@@ -3,7 +3,6 @@ package dlc.daw.conveo.controller;
 import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Convenio;
 import dlc.daw.conveo.service.ConvenioService;
-import dlc.daw.conveo.service.TitulacionService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +17,10 @@ public class ConvenioController {
 
     private final CentroService centroService;
 
-    private final TitulacionService titulacionService;
-
     public ConvenioController(ConvenioService convenioService,
-            CentroService centroService, TitulacionService titulacionService) {
+            CentroService centroService) {
         this.convenioService = convenioService;
         this.centroService = centroService;
-        this.titulacionService = titulacionService;
     }
 
     @GetMapping
@@ -37,21 +33,15 @@ public class ConvenioController {
     public String nuevo(Model model) {
         model.addAttribute("convenio", new Convenio());
         model.addAttribute("centros", centroService.listarTodos());
-        model.addAttribute("titulaciones", titulacionService.listarTodas());
         return "convenios/formulario";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Convenio convenio,
             @RequestParam Long centroId,
-            @RequestParam(required = false) Long titulacionId,
             Model model) {
 
         convenio.setCentro(centroService.buscarPorId(centroId));
-        if (titulacionId != null)
-            convenio.setTitulacion(titulacionService.buscarPorId(titulacionId));
-        else
-            convenio.setTitulacion(null);
 
         try {
             convenioService.guardarValidando(convenio);
@@ -60,7 +50,6 @@ public class ConvenioController {
 
             // Recargar listas del formulario
             model.addAttribute("centros", centroService.listarTodos());
-            model.addAttribute("titulaciones", titulacionService.listarTodas());
 
             // Mensaje de error
             model.addAttribute("errorRegla", ex.getMessage());
@@ -80,7 +69,6 @@ public class ConvenioController {
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("convenio", convenioService.buscarPorId(id));
         model.addAttribute("centros", centroService.listarTodos());
-        model.addAttribute("titulaciones", titulacionService.listarTodas());
         return "convenios/formulario";
     }
 }

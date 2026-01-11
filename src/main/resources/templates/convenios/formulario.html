@@ -33,14 +33,6 @@
             </option>
         </select><br />
 
-        <label>Titulación:</label>
-        <select name="titulacionId">
-            <option value="">-- Selecciona una titulación --</option>
-            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
-                th:selected="${convenio.titulacion != null and convenio.titulacion.id == t.id}">
-            </option>
-        </select><br />
-
         <button type="submit">Guardar</button>
     </form>
 

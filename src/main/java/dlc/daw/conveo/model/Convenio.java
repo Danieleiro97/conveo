@@ -24,10 +24,6 @@ public class Convenio {
     @JoinColumn(name = "centro_id", nullable = false)
     private Centro centro;
 
-    @ManyToOne
-    @JoinColumn(name = "titulacion_id", nullable = false)
-    private Titulacion titulacion;
-
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaInicio;
 
