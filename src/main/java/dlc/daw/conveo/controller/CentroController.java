@@ -1,14 +1,12 @@
 package dlc.daw.conveo.controller;
 
 import dlc.daw.conveo.model.Centro;
-import dlc.daw.conveo.model.Titulacion;
 import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.CentroTitulacionService;
 import dlc.daw.conveo.service.TitulacionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @Controller
 @RequestMapping("/centros")
