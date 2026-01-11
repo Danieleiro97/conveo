@@ -1,13 +1,11 @@
 package dlc.daw.conveo.controller;
 
+import dlc.daw.conveo.service.EstudianteService;
+import dlc.daw.conveo.service.TutorEmpresaService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import dlc.daw.conveo.service.EstudianteService;
-import dlc.daw.conveo.service.TutorEmpresaService;
-import java.util.List;
 
 @Controller
 public class TutorEmpresaController {
@@ -22,7 +20,8 @@ public class TutorEmpresaController {
 
     @GetMapping("/mis-estudiantes")
     public String misEstudiantes(Authentication authentication, Model model) {
-        String email = authentication.getName(); // email del usuario logueado
+
+        String email = authentication.getName();
         var tutor = tutorEmpresaService.buscarPorEmailUsuario(email);
 
         if (tutor == null) {
@@ -34,3 +33,4 @@ public class TutorEmpresaController {
         return "tutor/mis-estudiantes";
     }
 }
+
