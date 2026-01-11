@@ -52,6 +52,11 @@ public class ConvenioService {
             }
         }
 
+        if (convenio.getFechaInicio() != null && convenio.getFechaFin() != null) {
+            if (convenio.getFechaFin().isBefore(convenio.getFechaInicio())) {
+                throw new ReglaNegocioException("La fecha fin no puede ser anterior a la fecha inicio.");
+            }
+        }
         convenioRepository.save(convenio);
     }
 

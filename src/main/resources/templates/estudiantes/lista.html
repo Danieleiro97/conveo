@@ -11,6 +11,51 @@
     <h1>Listado de Estudiantes</h1>
 
     <a th:href="@{/estudiantes/nuevo}">Nuevo Estudiante</a>
+    <h2>Filtros</h2>
+
+    <form th:action="@{/estudiantes}" method="get" style="margin-bottom:15px;">
+        <label>Centro:</label>
+        <select name="centroId">
+            <option value="">-- Todos --</option>
+            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
+                th:selected="${centroId != null and centroId == c.id}">
+            </option>
+        </select>
+
+        <label style="margin-left:10px;">Titulación:</label>
+        <select name="titulacionId">
+            <option value="">-- Todas --</option>
+            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
+                th:selected="${titulacionId != null and titulacionId == t.id}">
+            </option>
+        </select>
+
+        <label style="margin-left:10px;">Convenio:</label>
+        <select name="convenioId">
+            <option value="">-- Todos --</option>
+            <option th:each="cv : ${convenios}" th:value="${cv.id}" th:text="${cv.nombre}"
+                th:selected="${convenioId != null and convenioId == cv.id}">
+            </option>
+        </select>
+
+        <label style="margin-left:10px;">Activo:</label>
+        <select name="activo">
+            <option value="" th:selected="${activo == null}">-- Todos --</option>
+            <option value="true" th:selected="${activo != null and activo}">Sí</option>
+            <option value="false" th:selected="${activo != null and !activo}">No</option>
+        </select>
+
+        <label style="margin-left:10px;">Tutor asignado:</label>
+        <select name="tutorAsignado">
+            <option value="" th:selected="${tutorAsignado == null}">-- Todos --</option>
+            <option value="true" th:selected="${tutorAsignado != null and tutorAsignado}">Sí</option>
+            <option value="false" th:selected="${tutorAsignado != null and !tutorAsignado}">No</option>
+        </select>
+
+        <button type="submit" style="margin-left:10px;">Aplicar</button>
+
+        <a th:href="@{/estudiantes}" style="margin-left:10px;">Limpiar</a>
+    </form>
 
     <table border="1">
         <tr>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Estudiante;
 import dlc.daw.conveo.model.TutorEmpresa;
 import dlc.daw.conveo.service.AsignacionTutorEmpresaService;
@@ -44,19 +45,34 @@ public class EstudianteController {
     }
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("estudiantes", estudianteService.listarTodos());
+    public String listar(@RequestParam(required = false) Long centroId,
+            @RequestParam(required = false) Long titulacionId,
+            @RequestParam(required = false) Long convenioId,
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(required = false) Boolean tutorAsignado,
+            Model model) {
+
+        model.addAttribute("estudiantes",
+                estudianteService.buscarConFiltros(centroId, titulacionId, convenioId, activo, tutorAsignado));
+
+        // para pintar selects y mantener selección
+        model.addAttribute("centros", centroService.listarTodos());
+        model.addAttribute("titulaciones", titulacionService.listarTodas());
+        model.addAttribute("convenios", convenioService.listarTodos());
+
+        model.addAttribute("centroId", centroId);
+        model.addAttribute("titulacionId", titulacionId);
+        model.addAttribute("convenioId", convenioId);
+        model.addAttribute("activo", activo);
+        model.addAttribute("tutorAsignado", tutorAsignado);
+
         return "estudiantes/lista";
     }
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("estudiante", new Estudiante());
-        model.addAttribute("centros", centroService.listarTodos());
-        model.addAttribute("convenios", convenioService.listarTodos());
-        model.addAttribute("titulaciones", titulacionService.listarTodas());
-        model.addAttribute("tutoresEmpresa", tutorEmpresaService.listarTodos());
-
+        cargarListasFormulario(model);
         return "estudiantes/formulario";
     }
 
@@ -65,31 +81,42 @@ public class EstudianteController {
             @RequestParam Long centroId,
             @RequestParam Long titulacionId,
             @RequestParam(required = false) Long convenioId,
-            @RequestParam(required = false) Long tutorEmpresaId) {
+            @RequestParam(required = false) Long tutorEmpresaId,
+            Model model) {
 
         estudiante.setCentro(centroService.buscarPorId(centroId));
         estudiante.setTitulacion(titulacionService.buscarPorId(titulacionId));
 
-        if (convenioId != null)
+        if (convenioId != null) {
             estudiante.setConvenio(convenioService.buscarPorId(convenioId));
-        else
+        } else {
             estudiante.setConvenio(null);
+        }
 
         TutorEmpresa nuevoTutor = (tutorEmpresaId != null)
                 ? tutorEmpresaService.buscarPorId(tutorEmpresaId)
                 : null;
 
-        // 1) Guardar primero (asegura ID si es nuevo)
-        estudianteService.guardar(estudiante);
+        try {
+            // 1) Guardar primero (asegura ID si es nuevo) + VALIDACIONES
+            estudianteService.guardarValidando(estudiante);
 
-        // 2) Registrar histórico (usa estudiante.getId())
-        asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, nuevoTutor);
+            // 2) Registrar histórico (usa estudiante.getId())
+            asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, nuevoTutor);
 
-        // 3) Setear tutor actual y guardar
-        estudiante.setTutorEmpresa(nuevoTutor);
-        estudianteService.guardar(estudiante);
+            // 3) Setear tutor actual y guardar (con validación también)
+            estudiante.setTutorEmpresa(nuevoTutor);
+            estudianteService.guardarValidando(estudiante);
 
-        return "redirect:/estudiantes";
+            return "redirect:/estudiantes";
+
+        } catch (ReglaNegocioException ex) {
+            // Volver al formulario con mensaje y listas cargadas
+            model.addAttribute("errorRegla", ex.getMessage());
+            model.addAttribute("estudiante", estudiante);
+            cargarListasFormulario(model);
+            return "estudiantes/formulario";
+        }
     }
 
     @GetMapping("/eliminar/{id}")
@@ -101,10 +128,14 @@ public class EstudianteController {
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("estudiante", estudianteService.buscarPorId(id));
-        model.addAttribute("convenios", convenioService.listarTodos());
+        cargarListasFormulario(model);
+        return "estudiantes/formulario";
+    }
+
+    private void cargarListasFormulario(Model model) {
         model.addAttribute("centros", centroService.listarTodos());
+        model.addAttribute("convenios", convenioService.listarTodos());
         model.addAttribute("titulaciones", titulacionService.listarTodas());
         model.addAttribute("tutoresEmpresa", tutorEmpresaService.listarTodos());
-        return "estudiantes/formulario";
     }
 }
