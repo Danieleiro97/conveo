@@ -9,6 +9,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    private final RoleBasedSuccessHandler successHandler;
+
+    public SecurityConfig(RoleBasedSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -17,26 +23,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .authorizeHttpRequests(auth -> auth
-                        // estáticos
-                        .requestMatchers("/webjars/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/webjars/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 
-                        // accesoss por roles (ajustable)
-                        .requestMatchers("/centros/**").hasRole("ADMIN")
-                        .requestMatchers("/convenios/**").hasRole("ADMIN")
-                        .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
-                        .requestMatchers("/estudiantes/*/historial-tutor").hasAnyRole("ADMIN", "RRHH")
-                        .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
-                        .requestMatchers("/mi-historial-estudiantes").hasRole("TUTOR_EMPRESA")
-                        .requestMatchers("/mis-estudiantes").hasRole("TUTOR_EMPRESA")
-                        // resto
-                        .anyRequest().authenticated())
-                .formLogin(login -> login
-                        .defaultSuccessUrl("/estudiantes", true)
-                        .permitAll())
-                .logout(logout -> logout.permitAll());
+                .requestMatchers("/centros/**").hasRole("ADMIN")
+                .requestMatchers("/convenios/**").hasRole("ADMIN")
+                .requestMatchers("/tutores-empresa/**").hasRole("ADMIN")
+                .requestMatchers("/titulaciones/**").hasRole("ADMIN")
+
+                .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "RRHH")
+
+                .requestMatchers("/mis-estudiantes/**").hasRole("TUTOR_EMPRESA")
+                .requestMatchers("/mi-historial-estudiantes/**").hasRole("TUTOR_EMPRESA")
+
+                .anyRequest().authenticated()
+        );
+
+        http.formLogin(login -> login
+                .successHandler(successHandler)   // ✅ aquí
+                .permitAll()
+        );
+
+        http.logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+        );
 
         return http.build();
     }

@@ -1,46 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Centros</title>
-</head>
+<head th:replace="~{fragments/head :: head('Centros')}"></head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
 
-    <h1>Centros</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <a th:href="@{/centros/nuevo}">Nuevo Centro</a>
+    <div class="container">
 
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Ubicación</th>
-            <th>Email</th>
-            <th>Titulaciones</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-        </tr>
-        <tr th:each="c : ${centros}">
-            <td th:text="${c.id}"></td>
-            <td th:text="${c.nombre}"></td>
-            <td th:text="${c.ubicacion}"></td>
-            <td th:text="${c.emailContacto}"></td>
-            <td th:text="${#strings.isEmpty(titulacionesPorCentro[c.id]) ? '—' : titulacionesPorCentro[c.id]}"></td>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Centros</h1>
+            <a class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','RRHH')" th:href="@{/centros/nuevo}">
+                Nuevo Centro
+            </a>
+        </div>
 
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 70px;">ID</th>
+                                <th>Nombre</th>
+                                <th>Ubicación</th>
+                                <th>Email</th>
+                                <th>Titulaciones</th>
+                                <th style="width: 90px;">Activo</th>
+                                <th style="width: 260px;">Acciones</th>
+                            </tr>
+                        </thead>
 
-            <td th:text="${c.activo}"></td>
-            <td>
-                <a th:href="@{/centros/{id}(id=${c.id})}">Ver</a> |
-                <a th:href="@{/centros/editar/{id}(id=${c.id})}">Editar</a>
-                |
-                <a th:href="@{/centros/eliminar/{id}(id=${c.id})}" onclick="return confirm('¿Eliminar centro?');">
-                    Eliminar
-                </a>
-            </td>
-        </tr>
-    </table>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(centros)}">
+                                <td colspan="7" class="text-center py-4">
+                                    No hay centros para mostrar.
+                                </td>
+                            </tr>
+
+                            <tr th:each="c : ${centros}">
+                                <td th:text="${c.id}"></td>
+                                <td th:text="${c.nombre}"></td>
+                                <td th:text="${c.ubicacion}"></td>
+                                <td th:text="${c.emailContacto}"></td>
+
+                                <td
+                                    th:text="${#strings.isEmpty(titulacionesPorCentro[c.id]) ? '—' : titulacionesPorCentro[c.id]}">
+                                </td>
+
+                                <td th:text="${c.activo ? 'Sí' : 'No'}"></td>
+
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                            th:href="@{/centros/{id}(id=${c.id})}">Ver</a>
+
+                                        <a class="btn btn-sm btn-outline-primary"
+                                            sec:authorize="hasAnyRole('ADMIN','RRHH')"
+                                            th:href="@{/centros/editar/{id}(id=${c.id})}">Editar</a>
+
+                                        <a class="btn btn-sm btn-outline-danger" sec:authorize="hasRole('ADMIN')"
+                                            th:href="@{/centros/eliminar/{id}(id=${c.id})}"
+                                            onclick="return confirm('¿Eliminar centro?');">
+                                            Eliminar
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 

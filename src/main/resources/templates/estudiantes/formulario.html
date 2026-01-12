@@ -1,75 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Nuevo Estudiante</title>
-</head>
+<head th:replace="~{fragments/head :: head('Nuevo Estudiante')}"></head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
-    <div th:if="${errorRegla != null}" style="padding:10px; border:1px solid #f44336; margin:10px 0;">
-        <span th:text="${errorRegla}"></span>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Nuevo Estudiante</h1>
+            <a class="btn btn-outline-secondary" th:href="@{/estudiantes}">Volver</a>
+        </div>
+
+        <!-- Error de regla -->
+        <div th:if="${errorRegla != null}" class="alert alert-danger" role="alert">
+            <span th:text="${errorRegla}"></span>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <form th:action="@{/estudiantes/guardar}" th:object="${estudiante}" method="post" class="row g-3">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" th:field="*{nombre}" placeholder="Nombre" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" th:field="*{apellidos}" placeholder="Apellidos" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" placeholder="email@ejemplo.com" />
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" th:field="*{telefono}" placeholder="Teléfono" />
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">DNI</label>
+                        <input type="text" class="form-control" th:field="*{dni}" placeholder="DNI" />
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Inicio prácticas</label>
+                        <input type="date" class="form-control" th:field="*{fechaInicioPracticas}" />
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Fin prácticas</label>
+                        <input type="date" class="form-control" th:field="*{fechaFinPracticas}" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Centro</label>
+                        <select class="form-select" name="centroId">
+                            <option value="">-- Selecciona un centro --</option>
+                            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
+                                th:selected="${estudiante.centro != null and estudiante.centro.id == c.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Titulación</label>
+                        <select class="form-select" name="titulacionId">
+                            <option value="">-- Selecciona una titulación --</option>
+                            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
+                                th:selected="${estudiante.titulacion != null and estudiante.titulacion.id == t.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Tutor empresa</label>
+                        <select class="form-select" name="tutorEmpresaId">
+                            <option value="">-- Sin tutor empresa --</option>
+                            <option th:each="t : ${tutoresEmpresa}" th:value="${t.id}"
+                                th:text="${t.nombre + ' ' + t.apellidos}"
+                                th:selected="${estudiante.tutorEmpresa != null and estudiante.tutorEmpresa.id == t.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Convenio</label>
+                        <select class="form-select" name="convenioId">
+                            <option value="">-- Selecciona un convenio --</option>
+                            <option th:each="c : ${convenios}" th:value="${c.id}" th:text="${c.nombre}"
+                                th:selected="${estudiante.convenio != null and estudiante.convenio.id == c.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a class="btn btn-outline-secondary" th:href="@{/estudiantes}">Cancelar</a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
     </div>
-    <h1>Nuevo Estudiante</h1>
-
-    <form th:action="@{/estudiantes/guardar}" th:object="${estudiante}" method="post">
-        <input type="hidden" th:field="*{id}" />
-
-        <label>Nombre:</label>
-        <input type="text" th:field="*{nombre}" /><br />
-
-        <label>Apellidos:</label>
-        <input type="text" th:field="*{apellidos}" /><br />
-
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" /><br />
-
-        <label>Teléfono:</label>
-        <input type="text" th:field="*{telefono}" /><br />
-
-        <label>DNI:</label>
-        <input type="text" th:field="*{dni}" /><br />
-
-        <label>Inicio prácticas:</label>
-        <input type="date" th:field="*{fechaInicioPracticas}" /><br />
-
-        <label>Fin prácticas:</label>
-        <input type="date" th:field="*{fechaFinPracticas}" /><br />
-
-        <label>Centro:</label>
-        <select name="centroId">
-            <option value="">-- Selecciona un centro --</option>
-            <option th:each="c : ${centros}" th:value="${c.id}" th:text="${c.nombre}"
-                th:selected="${estudiante.centro != null and estudiante.centro.id == c.id}">
-            </option>
-        </select><br />
-        <label>Titulación:</label>
-        <select name="titulacionId">
-            <option value="">-- Selecciona una titulación --</option>
-            <option th:each="t : ${titulaciones}" th:value="${t.id}" th:text="${t.nombre}"
-                th:selected="${estudiante.titulacion != null and estudiante.titulacion.id == t.id}">
-            </option>
-        </select><br />
-        <label>Tutor empresa:</label>
-        <select name="tutorEmpresaId">
-            <option value="">-- Sin tutor empresa --</option>
-            <option th:each="t : ${tutoresEmpresa}" th:value="${t.id}" th:text="${t.nombre} + ' ' + ${t.apellidos}"
-                th:selected="${estudiante.tutorEmpresa != null and estudiante.tutorEmpresa.id == t.id}">
-            </option>
-        </select><br />
-        <label>Convenio:</label>
-        <select name="convenioId">
-            <option value="">-- Selecciona un convenio --</option>
-            <option th:each="c : ${convenios}" th:value="${c.id}" th:text="${c.nombre}"
-                th:selected="${estudiante.convenio != null and estudiante.convenio.id == c.id}">
-            </option>
-        </select><br />
-
-
-        <button type="submit">Guardar</button>
-    </form>
-
-    <a th:href="@{/estudiantes}">Volver</a>
 
 </body>
 

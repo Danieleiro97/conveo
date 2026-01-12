@@ -1,32 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Titulación</title>
+<head th:replace="~{fragments/head :: head(${titulacion.id == null ? 'Nueva Titulación' : 'Editar Titulación'})}">
 </head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
 
-    <h1 th:text="${titulacion.id == null ? 'Nueva Titulación' : 'Editar Titulación'}"></h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <form th:action="@{/titulaciones/guardar}" th:object="${titulacion}" method="post">
+    <div class="container">
 
-        <input type="hidden" th:field="*{id}" />
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0" th:text="${titulacion.id == null ? 'Nueva Titulación' : 'Editar Titulación'}">
+            </h1>
 
-        <label>Nombre:</label>
-        <input type="text" th:field="*{nombre}" /><br />
+            <a class="btn btn-outline-secondary" th:href="@{/titulaciones}">
+                Volver
+            </a>
+        </div>
 
-        <label>Nivel:</label>
-        <select th:field="*{nivel}">
-            <option th:each="n : ${niveles}" th:value="${n}" th:text="${n}">
-            </option>
-        </select><br />
+        <div class="card">
+            <div class="card-body">
 
-        <button type="submit">Guardar</button>
-    </form>
+                <form th:action="@{/titulaciones/guardar}" th:object="${titulacion}" method="post" class="row g-3">
 
-    <a th:href="@{/titulaciones}">Volver</a>
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" th:field="*{nombre}"
+                            placeholder="Nombre de la titulación" />
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Nivel</label>
+                        <select class="form-select" th:field="*{nivel}">
+                            <option th:each="n : ${niveles}" th:value="${n}" th:text="${n}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            Guardar
+                        </button>
+
+                        <a class="btn btn-outline-secondary" th:href="@{/titulaciones}">
+                            Cancelar
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
 
 </body>
 

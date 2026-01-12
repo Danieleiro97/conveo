@@ -1,46 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Historial tutor empresa</title>
-</head>
+<head th:replace="~{fragments/head :: head('Historial tutor empresa')}"></head>
 
 <body>
 
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <h1>Historial de tutor empresa</h1>
+    <div class="container">
 
-    <h3 th:text="'Estudiante: '+${estudiante.nombre} + ' ' + ${estudiante.apellidos}"></h3>
-    <p>
-        <b>Email:</b> <span th:text="${estudiante.email}"></span> |
-        <b>Centro:</b> <span th:text="${estudiante.centro.nombre}"></span>
-    </p>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="mb-0">Historial de tutor empresa</h1>
+                <div class="text-muted" th:text="${'Estudiante: ' + estudiante.nombre + ' ' + estudiante.apellidos}">
+                </div>
+            </div>
 
-    <table border="1" style="width:100%; border-collapse:collapse;">
-        <tr>
-            <th>Tutor</th>
-            <th>Email tutor</th>
-            <th>Fecha inicio</th>
-            <th>Fecha fin</th>
-            <th>Estado</th>
-        </tr>
+            <a class="btn btn-outline-secondary" th:href="@{/estudiantes}">Volver</a>
+        </div>
 
-        <tr th:if="${#lists.isEmpty(historial)}">
-            <td colspan="5">No hay histórico de tutorías para este estudiante.</td>
-        </tr>
+        <!-- Datos del estudiante -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <b>Datos del estudiante</b>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-5">
+                        <div class="text-muted">Email</div>
+                        <div th:text="${estudiante.email}"></div>
+                    </div>
 
-        <tr th:each="h : ${historial}">
-            <td th:text="${h.tutorEmpresa.nombre} + ' ' + ${h.tutorEmpresa.apellidos}"></td>
-            <td th:text="${h.tutorEmpresa.email}"></td>
-            <td th:text="${h.fechaInicio}"></td>
-            <td th:text="${h.fechaFin != null ? h.fechaFin : '—'}"></td>
-            <td th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}"></td>
-        </tr>
-    </table>
+                    <div class="col-12 col-md-5">
+                        <div class="text-muted">Centro</div>
+                        <div th:text="${estudiante.centro != null ? estudiante.centro.nombre : '—'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <br />
-    <a th:href="@{/estudiantes}">Volver</a>
+        <!-- Historial -->
+        <div class="card">
+            <div class="card-header">
+                <b>Histórico</b>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Tutor</th>
+                                <th>Email tutor</th>
+                                <th style="width: 140px;">Fecha inicio</th>
+                                <th style="width: 140px;">Fecha fin</th>
+                                <th style="width: 140px;">Estado</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(historial)}">
+                                <td colspan="5" class="text-center py-4">
+                                    No hay histórico de tutorías para este estudiante.
+                                </td>
+                            </tr>
+
+                            <tr th:each="h : ${historial}">
+                                <td
+                                    th:text="${h.tutorEmpresa != null ? h.tutorEmpresa.nombre + ' ' + h.tutorEmpresa.apellidos : '—'}">
+                                </td>
+                                <td th:text="${h.tutorEmpresa != null ? h.tutorEmpresa.email : '—'}"></td>
+                                <td th:text="${h.fechaInicio != null ? h.fechaInicio : '—'}"></td>
+                                <td th:text="${h.fechaFin != null ? h.fechaFin : '—'}"></td>
+                                <td th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
 

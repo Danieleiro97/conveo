@@ -1,41 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Nuevo Centro</title>
-</head>
+<head th:replace="~{fragments/head :: head('Nuevo Centro')}"></head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
 
-    <h1>Nuevo Centro</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <form th:action="@{/centros/guardar}" th:object="${centro}" method="post">
-        <input type="hidden" th:field="*{id}" />
-        <label>Nombre:</label>
-        <input type="text" th:field="*{nombre}" /><br />
+    <div class="container">
 
-        <label>Ubicación:</label>
-        <input type="text" th:field="*{ubicacion}" /><br />
-
-        <label>Email contacto:</label>
-        <input type="email" th:field="*{emailContacto}" /><br />
-
-        <h3>Titulaciones</h3>
-
-        <div th:each="t : ${titulaciones}">
-            <label>
-                <input type="checkbox" name="titulacionIds" th:value="${t.id}"
-                    th:checked="${asignadas.contains(t.id)}" />
-                <span th:text="${t.nombre} + ' (' + ${t.nivel} + ')'"></span>
-            </label>
-            <br />
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Nuevo Centro</h1>
+            <a class="btn btn-outline-secondary" th:href="@{/centros}">Volver</a>
         </div>
 
-        <button type="submit">Guardar</button>
-    </form>
+        <div class="card">
+            <div class="card-body">
 
-    <a th:href="@{/centros}">Volver</a>
+                <form th:action="@{/centros/guardar}" th:object="${centro}" method="post" class="row g-3">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" th:field="*{nombre}" placeholder="Nombre del centro" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Ubicación</label>
+                        <input type="text" class="form-control" th:field="*{ubicacion}"
+                            placeholder="Ciudad / dirección" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Email de contacto</label>
+                        <input type="email" class="form-control" th:field="*{emailContacto}"
+                            placeholder="contacto@centro.com" />
+                    </div>
+
+                    <div class="col-12">
+                        <hr class="my-2" />
+                        <h5 class="mb-3">Titulaciones</h5>
+
+                        <div class="row g-2">
+                            <div class="col-12 col-md-6 col-lg-4" th:each="t : ${titulaciones}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="titulacionIds"
+                                        th:value="${t.id}" th:checked="${asignadas.contains(t.id)}"
+                                        th:id="${'tit_' + t.id}" />
+                                    <label class="form-check-label" th:for="${'tit_' + t.id}">
+                                        <span th:text="${t.nombre + ' (' + t.nivel + ')'}"></span>
+
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a class="btn btn-outline-secondary" th:href="@{/centros}">Cancelar</a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
 
 </body>
 

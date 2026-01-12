@@ -1,37 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Titulaciones</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/head :: head('Titulaciones')}"></head>
+
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<h1>Listado de Titulaciones</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<a th:href="@{/titulaciones/nuevo}">Nueva Titulación</a>
+    <div class="container">
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Nivel</th>
-        <th>Acciones</th>
-    </tr>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Listado de Titulaciones</h1>
 
-    <tr th:each="t : ${titulaciones}">
-        <td th:text="${t.id}"></td>
-        <td th:text="${t.nombre}"></td>
-        <td th:text="${t.nivel}"></td>
-        <td>
-            <a th:href="@{/titulaciones/editar/{id}(id=${t.id})}">Editar</a>
-            |
-            <a th:href="@{/titulaciones/eliminar/{id}(id=${t.id})}"
-               onclick="return confirm('¿Eliminar titulación?');">
-                Eliminar
+            <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/titulaciones/nuevo}">
+                Nueva Titulación
             </a>
-        </td>
-    </tr>
-</table>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 70px;">ID</th>
+                                <th>Nombre</th>
+                                <th style="width: 160px;">Nivel</th>
+                                <th style="width: 220px;">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(titulaciones)}">
+                                <td colspan="4" class="text-center py-4">
+                                    No hay titulaciones registradas.
+                                </td>
+                            </tr>
+
+                            <tr th:each="t : ${titulaciones}">
+                                <td th:text="${t.id}"></td>
+                                <td th:text="${t.nombre}"></td>
+                                <td th:text="${t.nivel}"></td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+
+                                        <a class="btn btn-sm btn-outline-primary" sec:authorize="hasRole('ADMIN')"
+                                            th:href="@{/titulaciones/editar/{id}(id=${t.id})}">
+                                            Editar
+                                        </a>
+
+                                        <a class="btn btn-sm btn-outline-danger" sec:authorize="hasRole('ADMIN')"
+                                            th:href="@{/titulaciones/eliminar/{id}(id=${t.id})}"
+                                            onclick="return confirm('¿Eliminar titulación?');">
+                                            Eliminar
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
+
 </html>

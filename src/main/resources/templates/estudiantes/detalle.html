@@ -1,52 +1,129 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <title>Detalle estudiante</title>
-</head>
+<head th:replace="~{fragments/head :: head('Detalle estudiante')}"></head>
 
 <body>
 
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <h1>Ficha de estudiante</h1>
+    <div class="container">
 
-    <h2 th:text="${estudiante.nombre} + ' ' + ${estudiante.apellidos}"></h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="mb-0">Ficha de estudiante</h1>
+                <div class="text-muted" th:text="${estudiante.nombre + ' ' + estudiante.apellidos}"></div>
+            </div>
 
-    <p><b>ID:</b> <span th:text="${estudiante.id}"></span></p>
-    <p><b>Email:</b> <span th:text="${estudiante.email}"></span></p>
-    <p><b>Teléfono:</b> <span th:text="${estudiante.telefono}"></span></p>
-    <p><b>DNI:</b> <span th:text="${estudiante.dni}"></span></p>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-secondary" th:href="@{/estudiantes}">Volver</a>
 
-    <hr />
+                <a class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN','RRHH')"
+                    th:href="@{/estudiantes/editar/{id}(id=${estudiante.id})}">
+                    Editar
+                </a>
 
-    <p><b>Centro:</b> <span th:text="${estudiante.centro != null ? estudiante.centro.nombre : '—'}"></span></p>
-    <p><b>Titulación:</b> <span th:text="${estudiante.titulacion != null ? estudiante.titulacion.nombre : '—'}"></span>
-    </p>
-    <p><b>Convenio:</b> <span th:text="${estudiante.convenio != null ? estudiante.convenio.nombre : '—'}"></span></p>
+                <a class="btn btn-outline-info" sec:authorize="hasAnyRole('ADMIN','RRHH')"
+                    th:href="@{/estudiantes/{id}/historial-tutor(id=${estudiante.id})}">
+                    Historial tutor
+                </a>
+            </div>
+        </div>
 
-    <p>
-        <b>Tutor empresa actual:</b>
-        <span
-            th:text="${estudiante.tutorEmpresa != null ? estudiante.tutorEmpresa.nombre + ' ' + estudiante.tutorEmpresa.apellidos : 'Sin tutor asignado'}"></span>
-    </p>
+        <!-- Datos personales -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <b>Datos personales</b>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
 
-    <hr />
+                    <div class="col-12 col-md-2">
+                        <div class="text-muted">ID</div>
+                        <div th:text="${estudiante.id}"></div>
+                    </div>
 
-    <p><b>Inicio prácticas:</b> <span
-            th:text="${estudiante.fechaInicioPracticas != null ? estudiante.fechaInicioPracticas : '—'}"></span></p>
-    <p><b>Fin prácticas:</b> <span
-            th:text="${estudiante.fechaFinPracticas != null ? estudiante.fechaFinPracticas : '—'}"></span></p>
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted">Email</div>
+                        <div th:text="${estudiante.email != null ? estudiante.email : '—'}"></div>
+                    </div>
 
-    <p><b>Activo:</b> <span th:text="${estudiante.activo ? 'Sí' : 'No'}"></span></p>
+                    <div class="col-12 col-md-3">
+                        <div class="text-muted">Teléfono</div>
+                        <div th:text="${estudiante.telefono != null ? estudiante.telefono : '—'}"></div>
+                    </div>
 
-    <hr />
+                    <div class="col-12 col-md-3">
+                        <div class="text-muted">DNI</div>
+                        <div th:text="${estudiante.dni != null ? estudiante.dni : '—'}"></div>
+                    </div>
 
-    <a th:href="@{/estudiantes/editar/{id}(id=${estudiante.id})}">Editar</a>
-    |
-    <a th:href="@{/estudiantes/{id}/historial-tutor(id=${estudiante.id})}">Historial tutor</a>
-    |
-    <a th:href="@{/estudiantes}">Volver al listado</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Centro / titulación / convenio -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <b>Asignación académica</b>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted">Centro</div>
+                        <div th:text="${estudiante.centro != null ? estudiante.centro.nombre : '—'}"></div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted">Titulación</div>
+                        <div th:text="${estudiante.titulacion != null ? estudiante.titulacion.nombre : '—'}"></div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted">Convenio</div>
+                        <div th:text="${estudiante.convenio != null ? estudiante.convenio.nombre : '—'}"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="text-muted">Tutor empresa actual</div>
+                        <div
+                            th:text="${estudiante.tutorEmpresa != null ? estudiante.tutorEmpresa.nombre + ' ' + estudiante.tutorEmpresa.apellidos : 'Sin tutor asignado'}">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Prácticas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <b>Prácticas</b>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted">Inicio prácticas</div>
+                        <div th:text="${estudiante.fechaInicioPracticas != null ? estudiante.fechaInicioPracticas : '—'}"></div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted">Fin prácticas</div>
+                        <div th:text="${estudiante.fechaFinPracticas != null ? estudiante.fechaFinPracticas : '—'}"></div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="text-muted">Activo</div>
+                        <div th:text="${estudiante.activo ? 'Sí' : 'No'}"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 

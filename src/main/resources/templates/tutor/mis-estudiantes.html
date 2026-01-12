@@ -1,34 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Mis estudiantes</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/head :: head('Mis estudiantes')}"></head>
+
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<h1>Mis estudiantes</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Centro</th>
-        <th>Titulación</th>
-        <th>Convenio</th>
-        <th>Inicio</th>
-        <th>Fin</th>
-    </tr>
+    <div class="container">
 
-    <tr th:each="e : ${estudiantes}">
-        <td th:text="${e.nombre} + ' ' + ${e.apellidos}"></td>
-        <td th:text="${e.email}"></td>
-        <td th:text="${e.centro.nombre}"></td>
-        <td th:text="${e.titulacion.nombre}"></td>
-        <td th:text="${e.convenio != null ? e.convenio.nombre : '—'}"></td>
-        <td th:text="${e.fechaInicioPracticas}"></td>
-        <td th:text="${e.fechaFinPracticas}"></td>
-    </tr>
-</table>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Mis estudiantes</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Centro</th>
+                                <th>Titulación</th>
+                                <th>Convenio</th>
+                                <th style="width:130px;">Inicio</th>
+                                <th style="width:130px;">Fin</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(estudiantes)}">
+                                <td colspan="7" class="text-center py-4">
+                                    No tienes estudiantes asignados actualmente.
+                                </td>
+                            </tr>
+
+                            <tr th:each="e : ${estudiantes}">
+                                <td th:text="${e.nombre + ' ' + e.apellidos}"></td>
+                                <td th:text="${e.email}"></td>
+                                <td th:text="${e.centro != null ? e.centro.nombre : '—'}"></td>
+                                <td th:text="${e.titulacion != null ? e.titulacion.nombre : '—'}"></td>
+                                <td th:text="${e.convenio != null ? e.convenio.nombre : '—'}"></td>
+                                <td
+                                    th:text="${e.fechaInicioPracticas != null ? #temporals.format(e.fechaInicioPracticas,'dd/MM/yyyy') : '—'}">
+                                </td>
+                                <td
+                                    th:text="${e.fechaFinPracticas != null ? #temporals.format(e.fechaFinPracticas,'dd/MM/yyyy') : '—'}">
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/head :: head('Estudiantes')}"></head>
 
@@ -12,7 +12,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="mb-0">Listado de Estudiantes</h1>
-            <a class="btn btn-primary" th:href="@{/estudiantes/nuevo}">Nuevo Estudiante</a>
+            <a class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','RRHH')" th:href="@{/estudiantes/nuevo}">
+                Nuevo Estudiante
+            </a>
+
         </div>
 
         <div class="card mb-4">
@@ -123,20 +126,28 @@
 
                                 <td>
                                     <div class="d-flex flex-wrap gap-2">
+
                                         <a class="btn btn-sm btn-outline-secondary"
                                             th:href="@{/estudiantes/{id}(id=${e.id})}">Ver</a>
 
+
                                         <a class="btn btn-sm btn-outline-primary"
+                                            sec:authorize="hasAnyRole('ADMIN','RRHH')"
                                             th:href="@{/estudiantes/editar/{id}(id=${e.id})}">Editar</a>
 
+
                                         <a class="btn btn-sm btn-outline-info"
+                                            sec:authorize="hasAnyRole('ADMIN','RRHH')"
                                             th:href="@{/estudiantes/{id}/historial-tutor(id=${e.id})}">Historial</a>
 
-                                        <a class="btn btn-sm btn-outline-danger"
+
+                                        <a class="btn btn-sm btn-outline-danger" sec:authorize="hasRole('ADMIN')"
                                             th:href="@{/estudiantes/eliminar/{id}(id=${e.id})}"
                                             onclick="return confirm('¿Eliminar estudiante?');">Eliminar</a>
+
                                     </div>
                                 </td>
+
                             </tr>
                         </tbody>
 
