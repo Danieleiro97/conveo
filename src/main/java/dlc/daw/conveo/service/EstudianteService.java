@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Estudiante;
 import dlc.daw.conveo.repository.EstudianteRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EstudianteService {
