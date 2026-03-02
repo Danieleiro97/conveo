@@ -72,7 +72,12 @@
                                 <td th:text="${h.tutorEmpresa != null ? h.tutorEmpresa.email : '—'}"></td>
                                 <td th:text="${h.fechaInicio != null ? h.fechaInicio : '—'}"></td>
                                 <td th:text="${h.fechaFin != null ? h.fechaFin : '—'}"></td>
-                                <td th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}"></td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${h.fechaFin == null ? ' bg-success' : ' bg-secondary'}"
+                                        th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}">
+                                    </span>
+                                </td>
                             </tr>
 
                         </tbody>
