@@ -38,6 +38,9 @@
                     <li class="nav-item" sec:authorize="hasRole('RRHH')">
                         <a class="nav-link" th:href="@{/estudiantes}">Estudiantes</a>
                     </li>
+                    <li class="nav-item" sec:authorize="hasRole('RRHH')">
+                        <a class="nav-link" th:href="@{/tutores-empresa}">Tutores empresa</a>
+                    </li>
 
                     <!-- TUTOR_EMPRESA -->
                     <li class="nav-item" sec:authorize="hasRole('TUTOR_EMPRESA')">
