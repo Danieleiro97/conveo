@@ -1,15 +1,15 @@
 package dlc.daw.conveo.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import dlc.daw.conveo.model.Estudiante;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import dlc.daw.conveo.model.Estudiante;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
   List<Estudiante> findByTutorEmpresa_Id(Long tutorEmpresaId);
@@ -48,4 +48,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
 
   List<Estudiante> findByActivoFalseOrderByApellidosAscNombreAsc();
 
+  // Estudiantes activos, con tutor asignado, cuyas prácticas terminan en una
+  // fecha exacta
+  List<Estudiante> findByActivoTrueAndTutorEmpresaIsNotNullAndFechaFinPracticas(LocalDate fechaFinPracticas);
 }

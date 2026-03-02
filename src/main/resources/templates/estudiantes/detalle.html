@@ -106,12 +106,15 @@
 
                     <div class="col-6 col-md-3">
                         <div class="text-muted">Inicio prácticas</div>
-                        <div th:text="${estudiante.fechaInicioPracticas != null ? estudiante.fechaInicioPracticas : '—'}"></div>
+                        <div
+                            th:text="${estudiante.fechaInicioPracticas != null ? estudiante.fechaInicioPracticas : '—'}">
+                        </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="text-muted">Fin prácticas</div>
-                        <div th:text="${estudiante.fechaFinPracticas != null ? estudiante.fechaFinPracticas : '—'}"></div>
+                        <div th:text="${estudiante.fechaFinPracticas != null ? estudiante.fechaFinPracticas : '—'}">
+                        </div>
                     </div>
 
                     <div class="col-12 col-md-3">
@@ -122,7 +125,24 @@
                 </div>
             </div>
         </div>
+        <!-- Mensaje flash de éxito -->
+        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
 
+        <!-- Botón recordatorio: solo visible si quedan entre 0 y 15 días y hay tutor asignado -->
+        <div th:if="${diasRestantes != null
+             and diasRestantes <= 15
+             and diasRestantes >= 0
+             and estudiante.tutorEmpresa != null}" sec:authorize="hasAnyRole('ADMIN','RRHH')" class="mb-4">
+            <form th:action="@{/estudiantes/{id}/recordatorio(id=${estudiante.id})}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-warning">
+                    ⚠️ Enviar recordatorio al tutor de empresa
+                </button>
+            </form>
+        </div>
     </div>
 
 </body>

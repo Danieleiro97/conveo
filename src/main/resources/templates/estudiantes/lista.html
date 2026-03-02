@@ -12,6 +12,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="mb-0">Listado de Estudiantes</h1>
+            <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${mensajeExito}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <a class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','RRHH')" th:href="@{/estudiantes/nuevo}">
                 Nuevo Estudiante
             </a>
@@ -140,7 +144,19 @@
                                             sec:authorize="hasAnyRole('ADMIN','RRHH')"
                                             th:href="@{/estudiantes/{id}/historial-tutor(id=${e.id})}">Historial</a>
 
-
+                                        <!-- Botón recordatorio: solo si quedan entre 0 y 15 días y tiene tutor asignado -->
+                                        <form th:if="${diasRestantesMap[e.id] != null
+              and diasRestantesMap[e.id] <= 15
+              and diasRestantesMap[e.id] >= 0
+              and e.tutorEmpresa != null}" sec:authorize="hasAnyRole('ADMIN','RRHH')"
+                                            th:action="@{/estudiantes/{id}/recordatorio(id=${e.id}, origen='lista')}"
+                                            method="post" class="d-inline">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}" />
+                                            <button type="submit" class="btn btn-sm btn-warning">
+                                                Enviar Recordatorio al Tutor
+                                            </button>
+                                        </form>
                                         <form sec:authorize="hasRole('ADMIN')" th:if="${e.activo}"
                                             th:action="@{/estudiantes/eliminar/{id}(id=${e.id})}" method="post"
                                             class="d-inline" onsubmit="return confirm('¿Dar de baja al estudiante?');">

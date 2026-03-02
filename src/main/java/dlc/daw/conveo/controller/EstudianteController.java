@@ -1,5 +1,11 @@
 package dlc.daw.conveo.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Estudiante;
@@ -15,6 +22,7 @@ import dlc.daw.conveo.model.TutorEmpresa;
 import dlc.daw.conveo.service.AsignacionTutorEmpresaService;
 import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.ConvenioService;
+import dlc.daw.conveo.service.EmailService;
 import dlc.daw.conveo.service.EstudianteService;
 import dlc.daw.conveo.service.TitulacionService;
 import dlc.daw.conveo.service.TutorEmpresaService;
@@ -29,19 +37,22 @@ public class EstudianteController {
     private final TitulacionService titulacionService;
     private final TutorEmpresaService tutorEmpresaService;
     private final AsignacionTutorEmpresaService asignacionTutorEmpresaService;
+    private final EmailService emailService;
 
     public EstudianteController(EstudianteService estudianteService,
             ConvenioService convenioService,
             CentroService centroService,
             TitulacionService titulacionService,
             TutorEmpresaService tutorEmpresaService,
-            AsignacionTutorEmpresaService asignacionTutorEmpresaService) {
+            AsignacionTutorEmpresaService asignacionTutorEmpresaService,
+            EmailService emailService) {
         this.estudianteService = estudianteService;
         this.convenioService = convenioService;
         this.centroService = centroService;
         this.titulacionService = titulacionService;
         this.tutorEmpresaService = tutorEmpresaService;
         this.asignacionTutorEmpresaService = asignacionTutorEmpresaService;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -52,9 +63,9 @@ public class EstudianteController {
             @RequestParam(required = false) Boolean tutorAsignado,
             Model model) {
 
-        model.addAttribute("estudiantes",
-                estudianteService.buscarConFiltros(centroId, titulacionId, convenioId, activo, tutorAsignado));
-
+        List<Estudiante> estudiantes = estudianteService.buscarConFiltros(centroId, titulacionId, convenioId, activo,
+                tutorAsignado);
+        model.addAttribute("estudiantes", estudiantes);
         // para pintar selects y mantener selección
         model.addAttribute("centros", centroService.listarTodos());
         model.addAttribute("titulaciones", titulacionService.listarTodas());
@@ -66,12 +77,30 @@ public class EstudianteController {
         model.addAttribute("activo", activo);
         model.addAttribute("tutorAsignado", tutorAsignado);
 
+        Map<Long, Long> diasRestantesMap = new HashMap<>();
+        for (Estudiante e : estudiantes) {
+            if (e.getFechaFinPracticas() != null) {
+                long dias = ChronoUnit.DAYS.between(LocalDate.now(), e.getFechaFinPracticas());
+                diasRestantesMap.put(e.getId(), dias);
+            }
+        }
+        model.addAttribute("diasRestantesMap", diasRestantesMap);
+
         return "estudiantes/lista";
     }
 
     @GetMapping("/{id}")
     public String detalle(@PathVariable Long id, Model model) {
-        model.addAttribute("estudiante", estudianteService.buscarPorId(id));
+        var estudiante = estudianteService.buscarPorId(id);
+        model.addAttribute("estudiante", estudiante);
+
+        // Calcular días restantes para mostrar el botón
+        long diasRestantes = Long.MAX_VALUE;
+        if (estudiante.getFechaFinPracticas() != null) {
+            diasRestantes = ChronoUnit.DAYS.between(LocalDate.now(), estudiante.getFechaFinPracticas());
+        }
+        model.addAttribute("diasRestantes", diasRestantes);
+
         return "estudiantes/detalle";
     }
 
@@ -144,4 +173,31 @@ public class EstudianteController {
         model.addAttribute("titulaciones", titulacionService.listarTodas());
         model.addAttribute("tutoresEmpresa", tutorEmpresaService.listarTodos());
     }
+
+    @PostMapping("/{id}/recordatorio")
+    public String enviarRecordatorioManual(@PathVariable Long id,
+            @RequestParam(defaultValue = "detalle") String origen,
+            RedirectAttributes ra) {
+        var estudiante = estudianteService.buscarPorId(id);
+
+        long diasRestantes = ChronoUnit.DAYS.between(LocalDate.now(), estudiante.getFechaFinPracticas());
+
+        if (diasRestantes <= 15 && diasRestantes >= 0
+                && estudiante.getTutorEmpresa() != null
+                && estudiante.getTutorEmpresa().getEmail() != null) {
+
+            emailService.enviarRecordatorioFinPracticas(
+                    estudiante.getTutorEmpresa().getEmail(),
+                    estudiante.getNombre() + " " + estudiante.getApellidos(),
+                    String.valueOf(estudiante.getFechaFinPracticas()),
+                    diasRestantes);
+            ra.addFlashAttribute("mensajeExito", "Recordatorio enviado al tutor de empresa.");
+        }
+
+        if (origen.equals("lista")) {
+            return "redirect:/estudiantes";
+        }
+        return "redirect:/estudiantes/" + id;
+    }
+
 }
