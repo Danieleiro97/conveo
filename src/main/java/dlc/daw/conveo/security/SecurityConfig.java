@@ -38,18 +38,16 @@ public class SecurityConfig {
                 .requestMatchers("/mis-estudiantes/**").hasRole("TUTOR_EMPRESA")
                 .requestMatchers("/mi-historial-estudiantes/**").hasRole("TUTOR_EMPRESA")
 
-                .anyRequest().authenticated()
-        );
+                .anyRequest().authenticated());
 
         http.formLogin(login -> login
-                .successHandler(successHandler)   // ✅ aquí
-                .permitAll()
-        );
+                .loginPage("/login")
+                .successHandler(successHandler) // ✅ aquí
+                .permitAll());
 
         http.logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
-                .permitAll()
-        );
+                .permitAll());
 
         return http.build();
     }

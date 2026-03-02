@@ -155,10 +155,17 @@ public class EstudianteController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-        estudianteService.eliminar(id); // ahora hace activo=false
-        return "redirect:/estudiantes";
-    }
+public String darDeBaja(@PathVariable Long id) {
+    Estudiante estudiante = estudianteService.buscarPorId(id);
+
+    // Cerrar asignación activa con el tutor
+    asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, null);
+
+    // Tu lógica de baja que ya tenías:
+    estudianteService.eliminar(id);
+
+    return "redirect:/estudiantes";
+}
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {

@@ -81,6 +81,10 @@
                                         th:classappend="${h.fechaFin == null ? ' bg-success' : ' bg-secondary'}"
                                         th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}">
                                     </span>
+                                    <!-- Indicador extra si el estudiante está de baja -->
+                                    <span th:if="${!h.estudiante.activo}" class="badge bg-danger ms-1">
+                                        BAJA
+                                    </span>
                                 </td>
                             </tr>
 
