@@ -1,11 +1,13 @@
 package dlc.daw.conveo.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import dlc.daw.conveo.exception.ReglaNegocioException;
 import dlc.daw.conveo.model.Estudiante;
 import dlc.daw.conveo.repository.EstudianteRepository;
-import org.springframework.stereotype.Service;
-import dlc.daw.conveo.exception.ReglaNegocioException;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EstudianteService {
@@ -41,8 +43,12 @@ public class EstudianteService {
         estudianteRepository.save(estudiante);
     }
 
+    @Transactional
     public void eliminar(Long id) {
-        estudianteRepository.deleteById(id);
+        Estudiante e = estudianteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+        e.setActivo(false);
+        estudianteRepository.save(e);
     }
 
     public Estudiante buscarPorId(Long id) {
@@ -69,6 +75,14 @@ public class EstudianteService {
         }
 
         estudianteRepository.save(e);
+    }
+
+    public List<Estudiante> listarActivos() {
+        return estudianteRepository.findByActivoTrueOrderByApellidosAscNombreAsc();
+    }
+
+    public List<Estudiante> listarInactivos() {
+        return estudianteRepository.findByActivoFalseOrderByApellidosAscNombreAsc();
     }
 
 }

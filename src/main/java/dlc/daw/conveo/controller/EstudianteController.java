@@ -125,9 +125,9 @@ public class EstudianteController {
         }
     }
 
-    @GetMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
-        estudianteService.eliminar(id);
+        estudianteService.eliminar(id); // ahora hace activo=false
         return "redirect:/estudiantes";
     }
 

@@ -21,6 +21,7 @@ public class Estudiante {
     private String apellidos;
     private String email;
     private String telefono;
+    @Column(unique = true)
     private String dni;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -29,6 +30,7 @@ public class Estudiante {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaFinPracticas;
 
+    @Column(nullable = false)
     private boolean activo = true;
 
     @ManyToOne

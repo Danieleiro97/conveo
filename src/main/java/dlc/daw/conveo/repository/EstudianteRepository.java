@@ -12,36 +12,40 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
-    List<Estudiante> findByTutorEmpresa_Id(Long tutorEmpresaId);
+  List<Estudiante> findByTutorEmpresa_Id(Long tutorEmpresaId);
 
-    long countByTutorEmpresa_IdAndActivoTrue(Long tutorEmpresaId);
+  long countByTutorEmpresa_IdAndActivoTrue(Long tutorEmpresaId);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Estudiante e SET e.tutorEmpresa = null WHERE e.tutorEmpresa.id = :tutorId")
-    int desasignarTutorEmpresa(@Param("tutorId") Long tutorId);
+  @Modifying
+  @Transactional
+  @Query("UPDATE Estudiante e SET e.tutorEmpresa = null WHERE e.tutorEmpresa.id = :tutorId")
+  int desasignarTutorEmpresa(@Param("tutorId") Long tutorId);
 
-    @Query("""
-                SELECT e
-                FROM Estudiante e
-                WHERE (:centroId IS NULL OR e.centro.id = :centroId)
-                  AND (:titulacionId IS NULL OR e.titulacion.id = :titulacionId)
-                  AND (:convenioId IS NULL OR e.convenio.id = :convenioId)
-                  AND (:activo IS NULL OR e.activo = :activo)
-                  AND (:tutorAsignado IS NULL OR
-                        (:tutorAsignado = TRUE AND e.tutorEmpresa IS NOT NULL) OR
-                        (:tutorAsignado = FALSE AND e.tutorEmpresa IS NULL)
-                      )
-                ORDER BY e.apellidos, e.nombre
-            """)
-    List<Estudiante> buscarConFiltros(@Param("centroId") Long centroId,
-            @Param("titulacionId") Long titulacionId,
-            @Param("convenioId") Long convenioId,
-            @Param("activo") Boolean activo,
-            @Param("tutorAsignado") Boolean tutorAsignado);
+  @Query("""
+          SELECT e
+          FROM Estudiante e
+          WHERE (:centroId IS NULL OR e.centro.id = :centroId)
+            AND (:titulacionId IS NULL OR e.titulacion.id = :titulacionId)
+            AND (:convenioId IS NULL OR e.convenio.id = :convenioId)
+            AND (:activo IS NULL OR e.activo = :activo)
+            AND (:tutorAsignado IS NULL OR
+                  (:tutorAsignado = TRUE AND e.tutorEmpresa IS NOT NULL) OR
+                  (:tutorAsignado = FALSE AND e.tutorEmpresa IS NULL)
+                )
+          ORDER BY e.apellidos, e.nombre
+      """)
+  List<Estudiante> buscarConFiltros(@Param("centroId") Long centroId,
+      @Param("titulacionId") Long titulacionId,
+      @Param("convenioId") Long convenioId,
+      @Param("activo") Boolean activo,
+      @Param("tutorAsignado") Boolean tutorAsignado);
 
-    List<Estudiante> findByConvenio_IdOrderByApellidosAscNombreAsc(Long convenioId);
+  List<Estudiante> findByConvenio_IdOrderByApellidosAscNombreAsc(Long convenioId);
 
-    List<Estudiante> findByCentro_IdOrderByApellidosAscNombreAsc(Long centroId);
+  List<Estudiante> findByCentro_IdOrderByApellidosAscNombreAsc(Long centroId);
+
+  List<Estudiante> findByActivoTrueOrderByApellidosAscNombreAsc();
+
+  List<Estudiante> findByActivoFalseOrderByApellidosAscNombreAsc();
 
 }
