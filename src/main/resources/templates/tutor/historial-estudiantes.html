@@ -22,8 +22,8 @@
                                 <th>Estudiante</th>
                                 <th>Email</th>
                                 <th>Centro</th>
-                                <th style="width: 140px;">Inicio asignación</th>
-                                <th style="width: 140px;">Fin asignación</th>
+                                <th style="width: 140px;">Inicio</th>
+                                <th style="width: 140px;">Fin</th>
                                 <th style="width: 140px;">Estado</th>
                             </tr>
                         </thead>
@@ -43,7 +43,8 @@
                                 <td
                                     th:text="${h.fechaInicio != null ? #temporals.format(h.fechaInicio,'dd/MM/yyyy') : '—'}">
                                 </td>
-                                <td th:text="${h.fechaFin != null ? #temporals.format(h.fechaFin,'dd/MM/yyyy') : '—'}">
+                                <td
+                                    th:text="${h.estudiante.fechaFinPracticas != null ? #temporals.format(h.estudiante.fechaFinPracticas,'dd/MM/yyyy') : '—'}">
                                 </td>
 
                                 <td>
