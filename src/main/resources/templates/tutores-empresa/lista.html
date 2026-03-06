@@ -36,13 +36,14 @@
                                 <th>Email</th>
                                 <th style="width: 140px;">DNI</th>
                                 <th>Cargo</th>
+                                <th style="width: 100px;">Estado</th>
                                 <th style="width: 360px;">Acciones</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <tr th:if="${#lists.isEmpty(tutores)}">
-                                <td colspan="5" class="text-center py-4">
+                                <td colspan="6" class="text-center py-4">
                                     No hay tutores de empresa registrados.
                                 </td>
                             </tr>
@@ -52,7 +53,11 @@
                                 <td th:text="${t.email}"></td>
                                 <td th:text="${t.dni}"></td>
                                 <td th:text="${t.cargoEmpresa != null ? t.cargoEmpresa : '—'}"></td>
-
+                                <td>
+                                    <span class="badge" th:classappend="${t.activo ? ' bg-success' : ' bg-secondary'}"
+                                        th:text="${t.activo ? 'ACTIVO' : 'BAJA'}">
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-2">
 

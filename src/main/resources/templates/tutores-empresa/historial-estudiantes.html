@@ -55,6 +55,7 @@
                                 <th style="width: 140px;">Inicio asignación</th>
                                 <th style="width: 140px;">Fin asignación</th>
                                 <th style="width: 140px;">Estado</th>
+                                <th style="width: 100px;">Ficha</th>
                             </tr>
                         </thead>
 
@@ -81,10 +82,15 @@
                                         th:classappend="${h.fechaFin == null ? ' bg-success' : ' bg-secondary'}"
                                         th:text="${h.fechaFin == null ? 'ACTIVA' : 'FINALIZADA'}">
                                     </span>
-                                    <!-- Indicador extra si el estudiante está de baja -->
                                     <span th:if="${!h.estudiante.activo}" class="badge bg-danger ms-1">
                                         BAJA
                                     </span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                        th:href="@{/estudiantes/{id}(id=${h.estudiante.id})}">
+                                        Ver ficha
+                                    </a>
                                 </td>
                             </tr>
 

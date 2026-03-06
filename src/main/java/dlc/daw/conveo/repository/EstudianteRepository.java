@@ -21,18 +21,20 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
   @Query("UPDATE Estudiante e SET e.tutorEmpresa = null WHERE e.tutorEmpresa.id = :tutorId")
   int desasignarTutorEmpresa(@Param("tutorId") Long tutorId);
 
-  @Query("""
-          SELECT e
-          FROM Estudiante e
-          WHERE (:centroId IS NULL OR e.centro.id = :centroId)
-            AND (:titulacionId IS NULL OR e.titulacion.id = :titulacionId)
-            AND (:convenioId IS NULL OR e.convenio.id = :convenioId)
-            AND (:activo IS NULL OR e.activo = :activo)
-            AND (:tutorAsignado IS NULL OR
-                  (:tutorAsignado = TRUE AND e.tutorEmpresa IS NOT NULL) OR
-                  (:tutorAsignado = FALSE AND e.tutorEmpresa IS NULL)
-                )
-          ORDER BY e.apellidos, e.nombre
+@Query("""
+        SELECT e
+        FROM Estudiante e
+        WHERE (:centroId IS NULL OR e.centro.id = :centroId)
+          AND (:titulacionId IS NULL OR e.titulacion.id = :titulacionId)
+          AND (:convenioId IS NULL OR e.convenio.id = :convenioId)
+          AND (:activo IS NULL OR e.activo = :activo)
+          AND (:tutorAsignado IS NULL OR
+                (:tutorAsignado = TRUE AND e.tutorEmpresa IS NOT NULL) OR
+                (:tutorAsignado = FALSE AND e.tutorEmpresa IS NULL)
+              )
+        ORDER BY
+            CASE WHEN e.fechaFinPracticas IS NULL THEN 1 ELSE 0 END,
+            e.fechaFinPracticas ASC
       """)
   List<Estudiante> buscarConFiltros(@Param("centroId") Long centroId,
       @Param("titulacionId") Long titulacionId,
