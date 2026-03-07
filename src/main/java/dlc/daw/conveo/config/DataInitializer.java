@@ -11,6 +11,7 @@ import dlc.daw.conveo.model.Centro;
 import dlc.daw.conveo.model.Convenio;
 import dlc.daw.conveo.model.Estudiante;
 import dlc.daw.conveo.model.Rol;
+import dlc.daw.conveo.model.SeguimientoTutor;
 import dlc.daw.conveo.model.Titulacion;
 import dlc.daw.conveo.model.TutorEmpresa;
 import dlc.daw.conveo.model.Usuario;
@@ -18,6 +19,7 @@ import dlc.daw.conveo.repository.AsignacionTutorEmpresaRepository;
 import dlc.daw.conveo.repository.CentroRepository;
 import dlc.daw.conveo.repository.ConvenioRepository;
 import dlc.daw.conveo.repository.EstudianteRepository;
+import dlc.daw.conveo.repository.SeguimientoTutorRepository;
 import dlc.daw.conveo.repository.TitulacionRepository;
 import dlc.daw.conveo.repository.TutorEmpresaRepository;
 import dlc.daw.conveo.repository.UsuarioRepository;
@@ -32,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
     private final TutorEmpresaRepository tutorEmpresaRepository;
     private final EstudianteRepository estudianteRepository;
     private final AsignacionTutorEmpresaRepository asignacionRepository;
+    private final SeguimientoTutorRepository seguimientoRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(UsuarioRepository usuarioRepository,
@@ -41,6 +44,7 @@ public class DataInitializer implements CommandLineRunner {
             TutorEmpresaRepository tutorEmpresaRepository,
             EstudianteRepository estudianteRepository,
             AsignacionTutorEmpresaRepository asignacionRepository,
+            SeguimientoTutorRepository seguimientoRepository,
             PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.centroRepository = centroRepository;
@@ -49,6 +53,7 @@ public class DataInitializer implements CommandLineRunner {
         this.tutorEmpresaRepository = tutorEmpresaRepository;
         this.estudianteRepository = estudianteRepository;
         this.asignacionRepository = asignacionRepository;
+        this.seguimientoRepository = seguimientoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -67,7 +72,6 @@ public class DataInitializer implements CommandLineRunner {
                 passwordEncoder.encode("rrhh1234"), Rol.RRHH, true);
         usuarioRepository.save(rrhh);
 
-        // Usuarios para los tutores de empresa
         var usuarioTutor1 = new Usuario(null, "marta.perez@empresa.es",
                 passwordEncoder.encode("tutor1234"), Rol.TUTOR_EMPRESA, true);
         usuarioRepository.save(usuarioTutor1);
@@ -84,44 +88,28 @@ public class DataInitializer implements CommandLineRunner {
         // CENTROS
         // ============================================================
 
-        var centro1 = new Centro(
-                null,
-                "IES Fernando Wirtz",
+        var centro1 = new Centro(null, "IES Fernando Wirtz",
                 "Rúa Caballeros, s/n, 15009 A Coruña",
                 "ies.fernando.wirtz@edu.xunta.gal",
-                true,
-                LocalDate.of(2020, 1, 10),
-                null);
+                true, LocalDate.of(2020, 1, 10), null);
         centroRepository.save(centro1);
 
-        var centro2 = new Centro(
-                null,
-                "Liceo La Paz",
+        var centro2 = new Centro(null, "Liceo La Paz",
                 "Rúa Manuel Murguía, 32, 15011 A Coruña",
                 "info@liceolapaz.com",
-                true,
-                LocalDate.of(2019, 9, 1),
-                null);
+                true, LocalDate.of(2019, 9, 1), null);
         centroRepository.save(centro2);
 
-        var centro3 = new Centro(
-                null,
-                "IES San Clemente",
+        var centro3 = new Centro(null, "IES San Clemente",
                 "Rúa San Clemente, s/n, 15705 Santiago de Compostela",
                 "ies.sanclemente@edu.xunta.gal",
-                true,
-                LocalDate.of(2021, 3, 15),
-                null);
+                true, LocalDate.of(2021, 3, 15), null);
         centroRepository.save(centro3);
 
-        var centro4 = new Centro(
-                null,
-                "Universidade da Coruña",
+        var centro4 = new Centro(null, "Universidade da Coruña",
                 "Rúa da Maestranza, 9, 15001 A Coruña",
                 "informacion@udc.gal",
-                true,
-                LocalDate.of(2022, 10, 1),
-                null);
+                true, LocalDate.of(2022, 10, 1), null);
         centroRepository.save(centro4);
 
         // ============================================================
@@ -144,233 +132,100 @@ public class DataInitializer implements CommandLineRunner {
         // CONVENIOS
         // ============================================================
 
-        var convenio1 = new Convenio(
-                null,
-                "Convenio IES Fernando Wirtz 2025-2026",
-                centro1,
-                LocalDate.of(2025, 9, 1),
-                LocalDate.of(2026, 6, 30),
-                true);
+        var convenio1 = new Convenio(null, "Convenio IES Fernando Wirtz 2025-2026",
+                centro1, LocalDate.of(2025, 9, 1), LocalDate.of(2026, 6, 30), true);
         convenioRepository.save(convenio1);
 
-        var convenio2 = new Convenio(
-                null,
-                "Convenio Liceo La Paz 2025-2026",
-                centro2,
-                LocalDate.of(2025, 9, 1),
-                LocalDate.now().plusDays(12),
-                true);
+        var convenio2 = new Convenio(null, "Convenio Liceo La Paz 2025-2026",
+                centro2, LocalDate.of(2025, 9, 1), LocalDate.now().plusDays(12), true);
         convenioRepository.save(convenio2);
 
-        var convenio3 = new Convenio(
-                null,
-                "Convenio IES Fernando Wirtz 2024-2025",
-                centro1,
-                LocalDate.of(2024, 9, 1),
-                LocalDate.of(2025, 6, 30),
-                false);
+        var convenio3 = new Convenio(null, "Convenio IES Fernando Wirtz 2024-2025",
+                centro1, LocalDate.of(2024, 9, 1), LocalDate.of(2025, 6, 30), false);
         convenioRepository.save(convenio3);
 
-        var convenio4 = new Convenio(
-                null,
-                "Convenio IES San Clemente 2025-2026",
-                centro3,
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2026, 5, 31),
-                true);
+        var convenio4 = new Convenio(null, "Convenio IES San Clemente 2025-2026",
+                centro3, LocalDate.of(2025, 10, 1), LocalDate.of(2026, 5, 31), true);
         convenioRepository.save(convenio4);
 
-        var convenio5 = new Convenio(
-                null,
-                "Convenio Universidade da Coruña 2025-2026",
-                centro4,
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2026, 6, 30),
-                true);
+        var convenio5 = new Convenio(null, "Convenio Universidade da Coruña 2025-2026",
+                centro4, LocalDate.of(2025, 10, 1), LocalDate.of(2026, 6, 30), true);
         convenioRepository.save(convenio5);
 
         // ============================================================
         // TUTORES DE EMPRESA
         // ============================================================
 
-        var tutor1 = new TutorEmpresa(
-                null,
-                "Marta",
-                "Pérez Gómez",
-                "marta.perez@empresa.es",
-                "12345678A",
-                "Jefa de Desarrollo",
-                LocalDate.of(2022, 1, 15),
-                null,
-                true,
-                usuarioTutor1);
+        var tutor1 = new TutorEmpresa(null, "Marta", "Pérez Gómez",
+                "marta.perez@empresa.es", "12345678A", "Jefa de Desarrollo",
+                LocalDate.of(2022, 1, 15), null, true, usuarioTutor1);
         tutorEmpresaRepository.save(tutor1);
 
-        var tutor2 = new TutorEmpresa(
-                null,
-                "Ana",
-                "Martín Ruiz",
-                "ana.martin@empresa.es",
-                "87654321B",
-                "Directora de RRHH",
-                LocalDate.of(2021, 6, 1),
-                null,
-                true,
-                usuarioTutor2);
+        var tutor2 = new TutorEmpresa(null, "Ana", "Martín Ruiz",
+                "ana.martin@empresa.es", "87654321B", "Directora de RRHH",
+                LocalDate.of(2021, 6, 1), null, true, usuarioTutor2);
         tutorEmpresaRepository.save(tutor2);
 
-        var tutor3 = new TutorEmpresa(
-                null,
-                "Jorge",
-                "Fernández Soto",
-                "jorge.fernandez@empresa.es",
-                "11223344C",
-                "Responsable de Infraestructura",
-                LocalDate.of(2023, 3, 10),
-                null,
-                true,
-                usuarioTutor3);
+        var tutor3 = new TutorEmpresa(null, "Jorge", "Fernández Soto",
+                "jorge.fernandez@empresa.es", "11223344C", "Responsable de Infraestructura",
+                LocalDate.of(2023, 3, 10), null, true, usuarioTutor3);
         tutorEmpresaRepository.save(tutor3);
 
-        // Tutor dado de baja (para demostrar histórico)
-        var tutor4 = new TutorEmpresa(
-                null,
-                "Laura",
-                "Gómez Pardo",
-                "laura.gomez@empresa.es",
-                "55667788D",
-                "Técnica Senior",
-                LocalDate.of(2020, 5, 20),
-                LocalDate.of(2024, 12, 31),
-                false,
-                null);
+        var tutor4 = new TutorEmpresa(null, "Laura", "Gómez Pardo",
+                "laura.gomez@empresa.es", "55667788D", "Técnica Senior",
+                LocalDate.of(2020, 5, 20), LocalDate.of(2024, 12, 31), false, null);
         tutorEmpresaRepository.save(tutor4);
 
         // ============================================================
         // ESTUDIANTES
         // ============================================================
 
-        // Estudiantes activos con tutor asignado
-        var e1 = new Estudiante(
-                null,
-                "Pedro",
-                "Martínez Rubio",
-                "pedro.mr@gmail.com",
-                "611111111",
-                "33445566E",
-                LocalDate.of(2026, 3, 1),
-                LocalDate.now().plusDays(12),
-                true,
-                centro2,
-                daw,
-                convenio2,
-                tutor2);
+        var e1 = new Estudiante(null, "Pedro", "Martínez Rubio",
+                "pedro.mr@gmail.com", "611111111", "33445566E",
+                LocalDate.of(2026, 3, 1), LocalDate.now().plusDays(12),
+                true, centro2, daw, convenio2, tutor2);
         estudianteRepository.save(e1);
 
-        var e2 = new Estudiante(
-                null,
-                "Lucía",
-                "Sánchez Vega",
-                "lucia.sv@gmail.com",
-                "622222222",
-                "44556677F",
-                LocalDate.of(2026, 3, 1),
-                LocalDate.of(2026, 6, 30),
-                true,
-                centro1,
-                dam,
-                convenio1,
-                tutor1);
+        var e2 = new Estudiante(null, "Lucía", "Sánchez Vega",
+                "lucia.sv@gmail.com", "622222222", "44556677F",
+                LocalDate.of(2026, 3, 1), LocalDate.of(2026, 6, 30),
+                true, centro1, dam, convenio1, tutor1);
         estudianteRepository.save(e2);
 
-        var e3 = new Estudiante(
-                null,
-                "Marcos",
-                "Díaz Iglesias",
-                "marcos.di@gmail.com",
-                "633333333",
-                "55667788G",
-                LocalDate.of(2026, 2, 1),
-                LocalDate.of(2026, 5, 31),
-                true,
-                centro3,
-                daw,
-                convenio4,
-                tutor3);
+        var e3 = new Estudiante(null, "Marcos", "Díaz Iglesias",
+                "marcos.di@gmail.com", "633333333", "55667788G",
+                LocalDate.of(2026, 2, 1), LocalDate.of(2026, 5, 31),
+                true, centro3, daw, convenio4, tutor3);
         estudianteRepository.save(e3);
 
-        var e4 = new Estudiante(
-                null,
-                "Elena",
-                "Torres Blanco",
-                "elena.tb@gmail.com",
-                "644444444",
-                "66778899H",
-                LocalDate.of(2026, 1, 15),
-                LocalDate.of(2026, 5, 15),
-                true,
-                centro4,
-                asir,
-                convenio5,
-                tutor3);
+        var e4 = new Estudiante(null, "Elena", "Torres Blanco",
+                "elena.tb@gmail.com", "644444444", "66778899H",
+                LocalDate.of(2026, 1, 15), LocalDate.of(2026, 5, 15),
+                true, centro4, asir, convenio5, tutor3);
         estudianteRepository.save(e4);
 
-        // Estudiante activo sin tutor asignado aún
-        var e5 = new Estudiante(
-                null,
-                "Rubén",
-                "Moreno Castro",
-                "ruben.mc@gmail.com",
-                "655555555",
-                "77889900I",
-                LocalDate.of(2026, 3, 10),
-                LocalDate.of(2026, 6, 30),
-                true,
-                centro2,
-                smr,
-                convenio2,
-                null);
+        var e5 = new Estudiante(null, "Rubén", "Moreno Castro",
+                "ruben.mc@gmail.com", "655555555", "77889900I",
+                LocalDate.of(2026, 3, 10), LocalDate.of(2026, 6, 30),
+                true, centro2, smr, convenio2, null);
         estudianteRepository.save(e5);
 
-        // Estudiante dado de baja (histórico)
-        var e6 = new Estudiante(
-                null,
-                "Sofía",
-                "Navarro Pérez",
-                "sofia.np@gmail.com",
-                "666666666",
-                "88990011J",
-                LocalDate.of(2024, 10, 1),
-                LocalDate.of(2025, 3, 31),
-                false,
-                centro1,
-                daw,
-                convenio3,
-                null);
+        var e6 = new Estudiante(null, "Sofía", "Navarro Pérez",
+                "sofia.np@gmail.com", "666666666", "88990011J",
+                LocalDate.of(2024, 10, 1), LocalDate.of(2025, 3, 31),
+                false, centro1, daw, convenio3, null);
         estudianteRepository.save(e6);
 
-        // Estudiante de convenio anterior (finalizado)
-        var e7 = new Estudiante(
-                null,
-                "Álvaro",
-                "Romero Gil",
-                "alvaro.rg@gmail.com",
-                "677777777",
-                "99001122K",
-                LocalDate.of(2024, 10, 1),
-                LocalDate.of(2025, 6, 30),
-                false,
-                centro1,
-                dam,
-                convenio3,
-                null);
+        var e7 = new Estudiante(null, "Álvaro", "Romero Gil",
+                "alvaro.rg@gmail.com", "677777777", "99001122K",
+                LocalDate.of(2024, 10, 1), LocalDate.of(2025, 6, 30),
+                false, centro1, dam, convenio3, null);
         estudianteRepository.save(e7);
 
         // ============================================================
-        // ASIGNACIONES (historial de tutores)
+        // ASIGNACIONES
         // ============================================================
 
-        // Asignaciones activas
         asignacionRepository.save(new AsignacionTutorEmpresa(
                 null, e1, tutor2, LocalDate.of(2026, 3, 1), null));
 
@@ -383,15 +238,85 @@ public class DataInitializer implements CommandLineRunner {
         asignacionRepository.save(new AsignacionTutorEmpresa(
                 null, e4, tutor3, LocalDate.of(2026, 1, 15), null));
 
-        // Asignaciones finalizadas
         asignacionRepository.save(new AsignacionTutorEmpresa(
                 null, e6, tutor1, LocalDate.of(2024, 10, 1), LocalDate.of(2025, 3, 31)));
 
         asignacionRepository.save(new AsignacionTutorEmpresa(
                 null, e7, tutor1, LocalDate.of(2024, 10, 1), LocalDate.of(2025, 6, 30)));
 
-        // Asignación finalizada de tutor4
         asignacionRepository.save(new AsignacionTutorEmpresa(
                 null, e6, tutor4, LocalDate.of(2024, 9, 1), LocalDate.of(2024, 10, 1)));
+
+        // ============================================================
+        // SEGUIMIENTOS
+        // ============================================================
+
+        // Lucía (e2) - tutor1 Marta: dos intermedios + final apto
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e2, tutor1,
+                LocalDate.of(2026, 3, 15),
+                SeguimientoTutor.TipoSeguimiento.SEGUIMIENTO,
+                4,
+                "Buena adaptación al entorno de trabajo. Muestra iniciativa y resuelve dudas de forma autónoma.",
+                null));
+
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e2, tutor1,
+                LocalDate.of(2026, 4, 20),
+                SeguimientoTutor.TipoSeguimiento.SEGUIMIENTO,
+                5,
+                "Excelente progreso. Ha participado en el desarrollo de un módulo completo con buenas prácticas.",
+                null));
+
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e2, tutor1,
+                LocalDate.of(2026, 6, 25),
+                SeguimientoTutor.TipoSeguimiento.FINAL,
+                5,
+                "Alumna muy destacada. Ha superado las expectativas del equipo y demostrado madurez profesional.",
+                true));
+
+        // Marcos (e3) - tutor3 Jorge: un intermedio
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e3, tutor3,
+                LocalDate.of(2026, 3, 10),
+                SeguimientoTutor.TipoSeguimiento.SEGUIMIENTO,
+                3,
+                "Rendimiento correcto aunque necesita mejorar la comunicación con el equipo.",
+                null));
+
+        // Elena (e4) - tutor3 Jorge: intermedio + final no apto
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e4, tutor3,
+                LocalDate.of(2026, 2, 20),
+                SeguimientoTutor.TipoSeguimiento.SEGUIMIENTO,
+                2,
+                "Dificultades para adaptarse al ritmo de trabajo. Se le han proporcionado recursos adicionales.",
+                null));
+
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e4, tutor3,
+                LocalDate.of(2026, 5, 10),
+                SeguimientoTutor.TipoSeguimiento.FINAL,
+                3,
+                "Ha mejorado respecto al inicio aunque no ha alcanzado el nivel esperado para el puesto.",
+                false));
+
+        // Sofía (e6) - tutor1 Marta: histórico completo con final apto
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e6, tutor1,
+                LocalDate.of(2024, 11, 15),
+                SeguimientoTutor.TipoSeguimiento.SEGUIMIENTO,
+                4,
+                "Buen desempeño general. Integración rápida en el equipo.",
+                null));
+
+        seguimientoRepository.save(new SeguimientoTutor(
+                null, e6, tutor1,
+                LocalDate.of(2025, 3, 28),
+                SeguimientoTutor.TipoSeguimiento.FINAL,
+                4,
+                "Alumna con buen nivel técnico y actitud positiva. Recomendada para futuras colaboraciones.",
+                true));
     }
 }
