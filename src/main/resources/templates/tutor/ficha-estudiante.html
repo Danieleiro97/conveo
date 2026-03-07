@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Ficha estudiante')}"></head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="mb-0" th:text="${estudiante.nombre + ' ' + estudiante.apellidos}"></h1>
+                <span class="text-muted">Ficha del estudiante</span>
+            </div>
+            <a class="btn btn-outline-secondary" th:href="@{/mis-estudiantes}">Volver</a>
+        </div>
+
+        <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+        <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
+
+        <!-- Datos del estudiante -->
+        <div class="card mb-4">
+            <div class="card-header"><b>Datos del estudiante</b></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="text-muted">Email</div>
+                        <div th:text="${estudiante.email}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Centro</div>
+                        <div th:text="${estudiante.centro != null ? estudiante.centro.nombre : '—'}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Titulación</div>
+                        <div th:text="${estudiante.titulacion != null ? estudiante.titulacion.nombre : '—'}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Inicio prácticas</div>
+                        <div
+                            th:text="${estudiante.fechaInicioPracticas != null ? #temporals.format(estudiante.fechaInicioPracticas,'dd/MM/yyyy') : '—'}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Fin prácticas</div>
+                        <div
+                            th:text="${estudiante.fechaFinPracticas != null ? #temporals.format(estudiante.fechaFinPracticas,'dd/MM/yyyy') : '—'}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seguimientos -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <b>Seguimientos registrados</b>
+                <a class="btn btn-sm btn-primary"
+                    th:href="@{/mis-estudiantes/{id}/seguimiento/nuevo(id=${estudiante.id})}">
+                    + Registrar seguimiento
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width:120px;">Fecha</th>
+                            <th style="width:120px;">Tipo</th>
+                            <th style="width:100px;">Valoración</th>
+                            <th style="width:150px;">Tutor</th>
+                            <th style="width:80px;">Apto</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(seguimientos)}">
+                            <td colspan="6" class="text-center py-4">
+                                No hay seguimientos registrados todavía.
+                            </td>
+                        </tr>
+                        <tr th:each="s : ${seguimientos}">
+                            <td th:text="${#temporals.format(s.fecha,'dd/MM/yyyy')}"></td>
+                            <td>
+                                <span class="badge"
+                                    th:classappend="${s.tipo.name() == 'FINAL' ? ' bg-primary' : ' bg-info text-dark'}"
+                                    th:text="${s.tipo.name()}">
+                                </span>
+                            </td>
+                            <td th:text="${s.valoracion} + ' / 5'"></td>
+                            <td th:text="${s.tutorEmpresa.nombre + ' ' + s.tutorEmpresa.apellidos}"></td>
+                            <td>
+                                <span th:if="${s.tipo.name() == 'FINAL' and s.apto != null}" class="badge"
+                                    th:classappend="${s.apto ? ' bg-success' : ' bg-danger'}"
+                                    th:text="${s.apto ? 'SÍ' : 'NO'}">
+                                </span>
+                                <span th:if="${s.tipo.name() != 'FINAL' or s.apto == null}" class="text-muted">—</span>
+                            </td>
+                            <td th:text="${s.observaciones != null ? s.observaciones : '—'}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

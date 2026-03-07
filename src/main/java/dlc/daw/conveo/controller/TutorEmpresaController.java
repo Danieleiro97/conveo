@@ -1,11 +1,12 @@
 package dlc.daw.conveo.controller;
 
-import dlc.daw.conveo.service.EstudianteService;
-import dlc.daw.conveo.service.TutorEmpresaService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import dlc.daw.conveo.service.EstudianteService;
+import dlc.daw.conveo.service.TutorEmpresaService;
 
 @Controller
 public class TutorEmpresaController {
@@ -20,17 +21,36 @@ public class TutorEmpresaController {
 
     @GetMapping("/mis-estudiantes")
     public String misEstudiantes(Authentication authentication, Model model) {
-
         String email = authentication.getName();
         var tutor = tutorEmpresaService.buscarPorEmailUsuario(email);
 
         if (tutor == null) {
             model.addAttribute("estudiantes", java.util.List.of());
+            model.addAttribute("diasRestantesMap", java.util.Map.of());
             return "tutor/mis-estudiantes";
         }
 
-        model.addAttribute("estudiantes", estudianteService.listarPorTutorEmpresa(tutor.getId()));
+        var estudiantes = estudianteService.listarPorTutorEmpresa(tutor.getId());
+
+        java.util.Map<Long, Long> diasRestantesMap = new java.util.HashMap<>();
+        for (var e : estudiantes) {
+            if (e.getFechaFinPracticas() != null) {
+                long dias = java.time.temporal.ChronoUnit.DAYS.between(
+                        java.time.LocalDate.now(), e.getFechaFinPracticas());
+                diasRestantesMap.put(e.getId(), dias);
+            }
+        }
+
+        model.addAttribute("estudiantes", estudiantes);
+        model.addAttribute("diasRestantesMap", diasRestantesMap);
         return "tutor/mis-estudiantes";
     }
-}
 
+    @GetMapping("/mi-perfil")
+    public String miPerfil(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        var tutor = tutorEmpresaService.buscarPorEmailUsuario(email);
+        model.addAttribute("tutor", tutor);
+        return "tutor/mi-perfil";
+    }
+}

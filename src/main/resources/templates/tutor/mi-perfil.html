@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Mi perfil')}"></head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Mi perfil</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><b>Datos personales</b></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="text-muted">Nombre completo</div>
+                        <div th:text="${tutor.nombre + ' ' + tutor.apellidos}"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted">Email</div>
+                        <div th:text="${tutor.email}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">DNI</div>
+                        <div th:text="${tutor.dni != null ? tutor.dni : '—'}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Cargo</div>
+                        <div th:text="${tutor.cargoEmpresa != null ? tutor.cargoEmpresa : '—'}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Estado</div>
+                        <span class="badge" th:classappend="${tutor.activo ? ' bg-success' : ' bg-secondary'}"
+                              th:text="${tutor.activo ? 'ACTIVO' : 'INACTIVO'}"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-muted">Fecha de alta</div>
+                        <div th:text="${tutor.fechaAlta != null ? #temporals.format(tutor.fechaAlta,'dd/MM/yyyy') : '—'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

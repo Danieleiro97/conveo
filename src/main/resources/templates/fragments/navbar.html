@@ -6,7 +6,7 @@
     <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
 
-            <a class="navbar-brand" th:href="@{/}">CONVEO</a>
+            <a class="navbar-brand fw-bold" th:href="@{/}">CONVEO</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarConveo"
                 aria-controls="navbarConveo" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,15 +47,23 @@
                         <a class="nav-link" th:href="@{/mis-estudiantes}">Mis estudiantes</a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('TUTOR_EMPRESA')">
-                        <a class="nav-link" th:href="@{/mi-historial-estudiantes}">Historial estudiantes</a>
+                        <a class="nav-link" th:href="@{/mi-historial-estudiantes}">Historial</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('TUTOR_EMPRESA')">
+                        <a class="nav-link" th:href="@{/mi-perfil}">Mi perfil</a>
                     </li>
 
                 </ul>
 
-                <!-- Usuario + Logout -->
-                <div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
-                    <span class="text-light me-3">
-                        Usuario: <b sec:authentication="name"></b>
+                <!-- Usuario + Rol + Logout -->
+                <div class="d-flex align-items-center gap-3" sec:authorize="isAuthenticated()">
+
+                    <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger">ADMIN</span>
+                    <span sec:authorize="hasRole('RRHH')" class="badge bg-warning text-dark">RRHH</span>
+                    <span sec:authorize="hasRole('TUTOR_EMPRESA')" class="badge bg-info text-dark">TUTOR</span>
+
+                    <span class="text-light">
+                        <b sec:authentication="name"></b>
                     </span>
 
                     <form th:action="@{/logout}" method="post" class="m-0">

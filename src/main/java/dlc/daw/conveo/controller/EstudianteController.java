@@ -24,6 +24,7 @@ import dlc.daw.conveo.service.CentroService;
 import dlc.daw.conveo.service.ConvenioService;
 import dlc.daw.conveo.service.EmailService;
 import dlc.daw.conveo.service.EstudianteService;
+import dlc.daw.conveo.service.SeguimientoTutorService;
 import dlc.daw.conveo.service.TitulacionService;
 import dlc.daw.conveo.service.TutorEmpresaService;
 
@@ -38,6 +39,7 @@ public class EstudianteController {
     private final TutorEmpresaService tutorEmpresaService;
     private final AsignacionTutorEmpresaService asignacionTutorEmpresaService;
     private final EmailService emailService;
+    private final SeguimientoTutorService seguimientoTutorService;
 
     public EstudianteController(EstudianteService estudianteService,
             ConvenioService convenioService,
@@ -45,7 +47,8 @@ public class EstudianteController {
             TitulacionService titulacionService,
             TutorEmpresaService tutorEmpresaService,
             AsignacionTutorEmpresaService asignacionTutorEmpresaService,
-            EmailService emailService) {
+            EmailService emailService,
+            SeguimientoTutorService seguimientoTutorService) {
         this.estudianteService = estudianteService;
         this.convenioService = convenioService;
         this.centroService = centroService;
@@ -53,6 +56,7 @@ public class EstudianteController {
         this.tutorEmpresaService = tutorEmpresaService;
         this.asignacionTutorEmpresaService = asignacionTutorEmpresaService;
         this.emailService = emailService;
+        this.seguimientoTutorService = seguimientoTutorService;
     }
 
     @GetMapping
@@ -94,12 +98,12 @@ public class EstudianteController {
         var estudiante = estudianteService.buscarPorId(id);
         model.addAttribute("estudiante", estudiante);
 
-        // Calcular días restantes para mostrar el botón
         long diasRestantes = Long.MAX_VALUE;
         if (estudiante.getFechaFinPracticas() != null) {
             diasRestantes = ChronoUnit.DAYS.between(LocalDate.now(), estudiante.getFechaFinPracticas());
         }
         model.addAttribute("diasRestantes", diasRestantes);
+        model.addAttribute("seguimientos", seguimientoTutorService.listarPorEstudiante(id));
 
         return "estudiantes/detalle";
     }
@@ -155,17 +159,17 @@ public class EstudianteController {
     }
 
     @PostMapping("/eliminar/{id}")
-public String darDeBaja(@PathVariable Long id) {
-    Estudiante estudiante = estudianteService.buscarPorId(id);
+    public String darDeBaja(@PathVariable Long id) {
+        Estudiante estudiante = estudianteService.buscarPorId(id);
 
-    // Cerrar asignación activa con el tutor
-    asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, null);
+        // Cerrar asignación activa con el tutor
+        asignacionTutorEmpresaService.actualizarAsignacionTutor(estudiante, null);
 
-    // Tu lógica de baja que ya tenías:
-    estudianteService.eliminar(id);
+        // Tu lógica de baja que ya tenías:
+        estudianteService.eliminar(id);
 
-    return "redirect:/estudiantes";
-}
+        return "redirect:/estudiantes";
+    }
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {

@@ -23,9 +23,10 @@
                                 <th>Email</th>
                                 <th>Centro</th>
                                 <th>Titulación</th>
-                                <th>Convenio</th>
                                 <th style="width:130px;">Inicio</th>
                                 <th style="width:130px;">Fin</th>
+                                <th style="width:130px;">Días restantes</th>
+                                <th style="width: 110px;">Acciones</th>
                             </tr>
                         </thead>
 
@@ -41,12 +42,31 @@
                                 <td th:text="${e.email}"></td>
                                 <td th:text="${e.centro != null ? e.centro.nombre : '—'}"></td>
                                 <td th:text="${e.titulacion != null ? e.titulacion.nombre : '—'}"></td>
-                                <td th:text="${e.convenio != null ? e.convenio.nombre : '—'}"></td>
                                 <td
                                     th:text="${e.fechaInicioPracticas != null ? #temporals.format(e.fechaInicioPracticas,'dd/MM/yyyy') : '—'}">
                                 </td>
                                 <td
                                     th:text="${e.fechaFinPracticas != null ? #temporals.format(e.fechaFinPracticas,'dd/MM/yyyy') : '—'}">
+                                </td>
+                                <td>
+                                    <span th:if="${diasRestantesMap[e.id] == null}" class="text-muted">—</span>
+                                    <span th:if="${diasRestantesMap[e.id] != null}" class="badge" th:classappend="${diasRestantesMap[e.id] < 0 ? ' bg-secondary' :
+                           diasRestantesMap[e.id] <= 7 ? ' bg-danger' :
+                           diasRestantesMap[e.id] <= 15 ? ' bg-warning text-dark' : ' bg-success'}"
+                                        th:text="${diasRestantesMap[e.id] < 0 ? 'Finalizado' : diasRestantesMap[e.id] + ' días'}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                            th:href="@{/mis-estudiantes/{id}(id=${e.id})}">
+                                            Ver ficha
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-primary"
+                                            th:href="@{/mis-estudiantes/{id}/seguimiento/nuevo(id=${e.id})}">
+                                            Añadir Seguimiento
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

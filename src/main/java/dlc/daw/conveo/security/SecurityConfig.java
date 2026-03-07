@@ -37,6 +37,7 @@ public class SecurityConfig {
 
                 .requestMatchers("/mis-estudiantes/**").hasRole("TUTOR_EMPRESA")
                 .requestMatchers("/mi-historial-estudiantes/**").hasRole("TUTOR_EMPRESA")
+                .requestMatchers("/mi-perfil/**").hasRole("TUTOR_EMPRESA")
 
                 .anyRequest().authenticated());
 
