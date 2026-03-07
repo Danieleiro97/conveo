@@ -11,7 +11,7 @@
     </parent>
     <groupId>dlc.daw</groupId>
     <artifactId>conveo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>conveo</name>
     <description>Aplicación web para la gestión de convenios y estudiantes (Conveo)</description>
     <url />

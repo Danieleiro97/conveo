@@ -1,10 +1,13 @@
 package dlc.daw.conveo.service;
 
-import dlc.daw.conveo.model.Centro;
-import dlc.daw.conveo.repository.CentroRepository;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import dlc.daw.conveo.model.Centro;
+import dlc.daw.conveo.repository.CentroRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CentroService {
@@ -27,8 +30,21 @@ public class CentroService {
         centroRepository.save(centro);
     }
 
+    @Transactional
     public void eliminar(Long id) {
-        centroRepository.deleteById(id);
+        Centro c = centroRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Centro no encontrado"));
+        c.setActivo(false);
+        c.setFechaBaja(LocalDate.now());
+        centroRepository.save(c);
+    }
+
+    @Transactional
+    public void activar(Long id) {
+        Centro c = centroRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Centro no encontrado"));
+        c.setActivo(true);
+        c.setFechaBaja(null);
+        centroRepository.save(c);
     }
 }
-

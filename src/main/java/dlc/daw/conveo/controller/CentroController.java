@@ -94,7 +94,7 @@ public class CentroController {
         return "redirect:/centros";
     }
 
-    @GetMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
         centroService.eliminar(id);
         return "redirect:/centros";
@@ -116,4 +116,9 @@ public class CentroController {
         return "centros/formulario";
     }
 
+    @PostMapping("/activar/{id}")
+    public String activar(@PathVariable Long id) {
+        centroService.activar(id);
+        return "redirect:/centros";
+    }
 }
